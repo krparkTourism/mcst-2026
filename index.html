@@ -9,6 +9,8 @@
 
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- QRCode.js (오프라인/캐시 대응용) -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
   <!-- Google Fonts (Pretendard) & Font Awesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -845,6 +847,160 @@
     .footer-inner p { word-break: keep-all; line-height: 1.7; }
 
     /* ============================================
+       ACCESS / QR 카드
+       ============================================ */
+    .access-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 1.3rem 1.15rem;
+      margin-bottom: 1.8rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.2rem;
+      align-items: center;
+    }
+    @media (min-width: 720px) {
+      .access-card {
+        grid-template-columns: 180px 1fr;
+        padding: 1.6rem 1.8rem;
+        gap: 1.6rem;
+      }
+    }
+    .qr-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.55rem;
+    }
+    .qr-box {
+      width: 156px;
+      height: 156px;
+      padding: 10px;
+      background: #ffffff;
+      border: 2px solid var(--primary);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.15);
+    }
+    .qr-box img, .qr-box canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+    .qr-caption {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-align: center;
+      word-break: keep-all;
+    }
+    .access-info h3 {
+      font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.25rem);
+      color: var(--primary);
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      word-break: keep-all;
+    }
+    .access-info p {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      margin-bottom: 0.85rem;
+      line-height: 1.6;
+      word-break: keep-all;
+    }
+    .access-url {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-bg);
+      color: var(--primary);
+      border: 1px solid #bfdbfe;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-family: 'Menlo', 'Consolas', monospace;
+      font-size: 0.82rem;
+      font-weight: 600;
+      word-break: break-all;
+      margin-bottom: 0.85rem;
+      text-decoration: none;
+    }
+    .access-url:hover { background: #dbeafe; }
+    .btn-group {
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0.55rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-action.primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-action.primary:hover {
+      background: var(--primary-light);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow);
+    }
+    .btn-action.secondary {
+      background: #fff;
+      color: var(--primary);
+      border-color: var(--border-strong);
+    }
+    .btn-action.secondary:hover {
+      background: var(--bg-soft);
+      border-color: var(--primary-light);
+      color: var(--primary-light);
+    }
+    .btn-action.accent {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-action.accent:hover {
+      background: #b45309;
+      transform: translateY(-1px);
+    }
+    .copy-toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--primary-dark);
+      color: #fff;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      z-index: 2000;
+      opacity: 0;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-lg);
+      pointer-events: none;
+    }
+    .copy-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ============================================
        CHART BOX
        ============================================ */
     .chart-box {
@@ -931,6 +1087,35 @@
 
   <!-- 메인 대시보드 컨테이너 -->
   <main class="container">
+
+    <!-- QR 코드 및 자료 다운로드 -->
+    <section class="access-card" aria-label="모바일 접속 및 자료 다운로드">
+      <div class="qr-wrap">
+        <div class="qr-box" id="qrBox" aria-label="QR 코드">
+          <!-- QR 이미지가 여기 자동 렌더링됩니다 -->
+        </div>
+        <div class="qr-caption">📱 QR 코드로 모바일 접속</div>
+      </div>
+      <div class="access-info">
+        <h3><i class="fa-solid fa-mobile-screen-button" style="color: var(--primary-light);" aria-hidden="true"></i> 모바일에서 바로 열람하기</h3>
+        <p>왼쪽 QR 코드를 스캔하거나 아래 주소로 접속하시면 스마트폰·태블릿에서 동일한 대시보드를 확인하실 수 있습니다. 원본 HWP 자료도 함께 내려받을 수 있습니다.</p>
+        <a href="https://krparktourism.github.io/mcst-2026/" target="_blank" rel="noopener" class="access-url" id="accessUrl">
+          <i class="fa-solid fa-link" aria-hidden="true"></i>
+          https://krparktourism.github.io/mcst-2026/
+        </a>
+        <div class="btn-group">
+          <a href="https://krparktourism.github.io/mcst-2026/" target="_blank" rel="noopener" class="btn-action primary">
+            <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> 대시보드 접속
+          </a>
+          <button type="button" class="btn-action secondary" id="copyUrlBtn">
+            <i class="fa-solid fa-copy" aria-hidden="true"></i> 주소 복사
+          </button>
+          <a href="문화전략담당관_기관_및_현안설명_자료_2026.8.21.hwp" download class="btn-action accent">
+            <i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> 원본 HWP 다운로드
+          </a>
+        </div>
+      </div>
+    </section>
 
     <!-- KPI 요약 카드 -->
     <section class="kpi-grid" aria-label="핵심 지표">
@@ -1021,7 +1206,7 @@
           Ⅱ. 조직 및 인력 현황 (5개 본부·1실 체제)
         </h2>
         <div class="section-actions">
-          <a href="https://www.kcti.re.kr/web/association/organization.do" target="_blank" rel="noopener" class="btn-top-small">
+          <a href="https://www.kcti.re.kr/introduce/organization.do" target="_blank" rel="noopener" class="btn-top-small">
             조직도 <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
           </a>
           <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> Top</a>
@@ -1102,7 +1287,7 @@
           Ⅲ. 예산 및 재무 구조 분석
         </h2>
         <div class="section-actions">
-          <a href="https://www.kcti.re.kr/web/intropage/intropageShow.do?page_id=19c93cf6d71445cd99c937fc1cc3f047" target="_blank" rel="noopener" class="btn-top-small">
+          <a href="https://www.kcti.re.kr/introduce/management.do" target="_blank" rel="noopener" class="btn-top-small">
             경영공시 <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
           </a>
           <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> Top</a>
@@ -2010,8 +2195,75 @@
     </div>
   </footer>
 
+  <!-- 복사 완료 토스트 -->
+  <div class="copy-toast" id="copyToast" role="status" aria-live="polite">
+    <i class="fa-solid fa-check-circle" aria-hidden="true"></i> 주소가 클립보드에 복사되었습니다
+  </div>
+
   <!-- Scripts -->
   <script>
+    // 0) QR 코드 생성 (qrcodejs 라이브러리 + 외부 API 폴백)
+    (function () {
+      const qrBox = document.getElementById('qrBox');
+      const targetUrl = 'https://krparktourism.github.io/mcst-2026/';
+      if (!qrBox) return;
+
+      // 우선 qrcodejs로 시도 (오프라인/CDN 캐시 후에도 동작)
+      if (typeof QRCode !== 'undefined') {
+        try {
+          new QRCode(qrBox, {
+            text: targetUrl,
+            width: 140,
+            height: 140,
+            colorDark: '#1e3a8a',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+          });
+          return;
+        } catch (e) { /* 아래 폴백 진행 */ }
+      }
+
+      // 폴백: 외부 QR 이미지 API
+      const img = document.createElement('img');
+      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=' + encodeURIComponent(targetUrl) + '&color=1e3a8a&margin=0';
+      img.alt = 'QR 코드 - ' + targetUrl;
+      img.loading = 'lazy';
+      qrBox.appendChild(img);
+    })();
+
+    // 0-1) URL 복사 기능
+    (function () {
+      const btn = document.getElementById('copyUrlBtn');
+      const toast = document.getElementById('copyToast');
+      const url = 'https://krparktourism.github.io/mcst-2026/';
+      if (!btn || !toast) return;
+
+      function showToast(msg) {
+        if (msg) toast.innerHTML = '<i class="fa-solid fa-check-circle" aria-hidden="true"></i> ' + msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+      }
+
+      btn.addEventListener('click', async () => {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(url);
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = url;
+            ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+          }
+          showToast('주소가 클립보드에 복사되었습니다');
+        } catch (e) {
+          showToast('복사에 실패했습니다. 수동으로 복사해 주세요.');
+        }
+      });
+    })();
+
     // 1) 햄버거 메뉴 토글
     (function () {
       const toggle = document.getElementById('navToggle');
