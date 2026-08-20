@@ -974,7 +974,7 @@
         </div>
       </div>
 
-      <!-- 2025 vs 2026 지출예산 상세 비교 표 (계층 및 구분 완벽 수정) -->
+      <!-- 2025 vs 2026 지출예산 상세 비교 표 (계층 및 구분 수정) -->
       <h3 class="sub-title" style="margin-top: 2rem;"><i class="fa-solid fa-table-list"></i> 2025 vs 2026 지출예산 상세 비교 (단위: 백만 원, %)</h3>
       <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
       <div class="table-responsive">
@@ -1421,7 +1421,7 @@
       </div>
     </section>
 
-    <!-- 6. 붙임 자료 (통합 수록) -->
+    <!-- 6. 붙임 자료 (완벽하게 재설계된 [붙임 1~4] 통합 수록) -->
     <section id="appendix" class="section-card">
       <div class="section-header">
         <div class="section-title">
@@ -1433,7 +1433,7 @@
         </div>
       </div>
 
-      <!-- [붙임 1] 2026년 기본연구과제 39건 전체 목록 (필터 기능 제공) -->
+      <!-- [붙임 1] 2026년 기본연구과제 39건 전체 목록 (필터 기능) -->
       <h3 class="sub-title"><i class="fa-solid fa-book-bookmark"></i> [붙임 1] 2026년 기본연구과제 전체 현황 (총 39건)</h3>
       <div class="filter-btn-group">
         <button class="filter-btn active" onclick="filterResearch('all', this)">전체보기 (39건)</button>
@@ -1610,18 +1610,19 @@
         </li>
       </ul>
 
-      <!-- [붙임 2 & 3] 통계 및 평가 상세 표 (좌우 스크롤 힌트 및 반응형 래퍼 완벽 적용) -->
+      <!-- [붙임 2 & 3] 통계 및 평가 상세 표 (대칭 2단 그리드로 깔끔하게 재배치) -->
       <div class="grid-2" style="margin-top: 2rem;">
+        <!-- [붙임 2] 국가승인통계 9종 상세 -->
         <div>
-          <h3 class="sub-title" style="margin-top:0;"><i class="fa-solid fa-chart-column"></i> [붙임 2] 국가승인통계 9종 상세</h3>
+          <h3 class="sub-title" style="margin-top:0;"><i class="fa-solid fa-chart-column" style="color: var(--primary-light);"></i> [붙임 2] 국가승인통계 9종 상세</h3>
           <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
           <div class="table-responsive">
             <table class="custom-table">
               <thead>
                 <tr>
-                  <th class="text-center" style="width: 25%;">분야</th>
-                  <th style="width: 40%;">통계명</th>
-                  <th style="width: 35%;">근거 법령 상세</th>
+                  <th class="text-center" style="width: 22%;">분야</th>
+                  <th style="width: 38%;">통계명</th>
+                  <th style="width: 40%;">근거 법령 상세</th>
                 </tr>
               </thead>
               <tbody>
@@ -1670,91 +1671,136 @@
           </div>
         </div>
 
+        <!-- [붙임 3] 정책사업 평가 전담 근거 -->
         <div>
-          <h3 class="sub-title" style="margin-top:0;"><i class="fa-solid fa-stamp"></i> [붙임 3] 정책사업 평가 전담 근거</h3>
+          <h3 class="sub-title" style="margin-top:0;"><i class="fa-solid fa-stamp" style="color: var(--primary-light);"></i> [붙임 3] 정책사업 평가 전담 근거</h3>
           <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
           <div class="table-responsive">
             <table class="custom-table">
               <thead>
                 <tr>
-                  <th class="text-center" style="width: 25%;">분야</th>
+                  <th class="text-center" style="width: 22%;">분야</th>
                   <th style="width: 35%;">평가명</th>
-                  <th style="width: 40%;">근거 법령 및 지정 현황</th>
+                  <th style="width: 43%;">근거 법령 및 지정 현황</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td class="text-center"><strong>문화</strong></td>
                   <td><strong>문화영향평가</strong></td>
-                  <td>「문화기본법」 제9조의4<br>• 지정기간: '26.3.26 ~ '29.3.25</td>
+                  <td>
+                    • 「문화기본법」 제9조의4 및 시행령 제6조의4<br>
+                    • 전담기관 지정기간: 2026.3.26 ~ 2029.3.25
+                  </td>
                 </tr>
                 <tr>
                   <td class="text-center"><strong>관광</strong></td>
                   <td><strong>관광특구평가</strong></td>
-                  <td>「관광진흥법」 시행령 제58조의2<br>• 법상 조사·분석 전문기관 명시</td>
+                  <td>
+                    • 「관광진흥법」 시행령 제58조의2<br>
+                    • 법상 조사·분석 전문기관(한국문화관광연구원) 명시
+                  </td>
                 </tr>
                 <tr>
                   <td class="text-center"><strong>관광</strong></td>
                   <td><strong>지역관광개발사업평가</strong></td>
-                  <td>「관광진흥법」 제76조의3 신설('26.3)<br>• 시행령 전담기관 지정 협의 중</td>
+                  <td>
+                    • 「관광진흥법」 제76조의3 신설('26.3.31 가결)<br>
+                    • 시행령 내 전담기관 지정 협의 중(하반기)
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
 
-          <!-- [붙임 4] 기본연구과제 유형별 요약 (좌우 스크롤 래퍼 적용) -->
-          <h3 class="sub-title" style="margin-top:1.5rem;"><i class="fa-solid fa-layer-group"></i> [붙임 4] 연구과제 유형 및 단가</h3>
-          <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
-          <div class="table-responsive">
-            <table class="custom-table">
-              <thead>
-                <tr>
-                  <th>유형</th>
-                  <th class="text-center">기간</th>
-                  <th class="text-right">'26 단가</th>
-                  <th class="text-center">'26 건수</th>
-                  <th>재원 구분</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>기초연구</strong></td>
-                  <td class="text-center">10개월</td>
-                  <td class="text-right">2,400만</td>
-                  <td class="text-center">6건</td>
-                  <td>출연금(일반)</td>
-                </tr>
-                <tr>
-                  <td><strong>정책연구</strong></td>
-                  <td class="text-center">8개월</td>
-                  <td class="text-right">2,000만</td>
-                  <td class="text-center">24건</td>
-                  <td>출연금(일반)</td>
-                </tr>
-                <tr>
-                  <td><strong>수시연구</strong></td>
-                  <td class="text-center">5개월</td>
-                  <td class="text-right">1,000만</td>
-                  <td class="text-center">9건</td>
-                  <td>R&D적립금</td>
-                </tr>
-                <tr>
-                  <td><strong>현안연구</strong></td>
-                  <td class="text-center">3개월</td>
-                  <td class="text-right">800만</td>
-                  <td class="text-center">11건</td>
-                  <td>R&D적립금</td>
-                </tr>
-                <tr>
-                  <td><strong>정책리포트</strong></td>
-                  <td class="text-center">1개월</td>
-                  <td class="text-right">150만</td>
-                  <td class="text-center">8건</td>
-                  <td>R&D적립금</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+      <!-- [붙임 4] 기본연구과제 유형별 현황 (단독 Full-Width 전체 표로 깔끔하게 수록) -->
+      <div style="margin-top: 2rem;">
+        <h3 class="sub-title" style="margin-top:0;"><i class="fa-solid fa-layer-group" style="color: var(--primary-light);"></i> [붙임 4] 기본연구과제 유형별 현황 및 단가 (원문 전체)</h3>
+        <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th class="text-center" style="width: 14%;">대구분</th>
+                <th style="width: 16%;">연구 유형</th>
+                <th class="text-center" style="width: 12%;">수행 기간</th>
+                <th class="text-right" style="width: 14%;">2026년 단가</th>
+                <th class="text-center" style="width: 11%;">'25년 실적</th>
+                <th class="text-center" style="width: 11%;">'26년 진행</th>
+                <th class="text-center" style="width: 10%;">'26년 잔여</th>
+                <th style="width: 12%;">재원 및 비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td rowspan="3" class="text-center highlight-row"><strong>기본연구</strong></td>
+                <td><strong>기초연구</strong></td>
+                <td class="text-center">10개월</td>
+                <td class="text-right"><strong>2,400만 원</strong></td>
+                <td class="text-center">6건</td>
+                <td class="text-center text-success">6건</td>
+                <td class="text-center">0건</td>
+                <td>연구예산 (정부출연금)</td>
+              </tr>
+              <tr>
+                <td><strong>정책연구</strong></td>
+                <td class="text-center">8개월</td>
+                <td class="text-right"><strong>2,000만 원</strong></td>
+                <td class="text-center">24건</td>
+                <td class="text-center text-success">24건</td>
+                <td class="text-center">0건</td>
+                <td>연구예산 (정부출연금)</td>
+              </tr>
+              <tr>
+                <td><strong>수시연구</strong></td>
+                <td class="text-center">5개월</td>
+                <td class="text-right"><strong>1,000만 원</strong></td>
+                <td class="text-center">9건</td>
+                <td class="text-center text-success">7건</td>
+                <td class="text-center">0건</td>
+                <td>연구개발적립금 ('26~)</td>
+              </tr>
+              <tr>
+                <td rowspan="4" class="text-center" style="background-color: #f8fafc;"><strong>기타연구</strong></td>
+                <td><strong>현안연구</strong></td>
+                <td class="text-center">3개월</td>
+                <td class="text-right"><strong>800만 원</strong></td>
+                <td class="text-center">8건</td>
+                <td class="text-center text-success">9건</td>
+                <td class="text-center text-danger">2건</td>
+                <td>연구개발적립금</td>
+              </tr>
+              <tr>
+                <td><strong>정책리포트</strong></td>
+                <td class="text-center">1개월</td>
+                <td class="text-right"><strong>150만 원</strong></td>
+                <td class="text-center">7건</td>
+                <td class="text-center text-success">6건</td>
+                <td class="text-center text-danger">1건</td>
+                <td>연구개발적립금</td>
+              </tr>
+              <tr>
+                <td><strong>협력연구</strong></td>
+                <td class="text-center">심의회 결정</td>
+                <td class="text-right">-</td>
+                <td class="text-center">1건</td>
+                <td class="text-center text-success">1건</td>
+                <td class="text-center">-</td>
+                <td>외부예산 (수탁)</td>
+              </tr>
+              <tr>
+                <td><strong>특별연구</strong></td>
+                <td class="text-center">5개월</td>
+                <td class="text-right"><strong>500만 원</strong></td>
+                <td class="text-center">1건</td>
+                <td class="text-center text-success">1건</td>
+                <td class="text-center">0건</td>
+                <td>연구개발적립금 (임피제)</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
