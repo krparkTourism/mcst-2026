@@ -353,19 +353,16 @@
       }
     }
 
-    /* 모바일 친화적 테이블 스타일 */
+    /* 모바일 친화적 테이블 스타일 & 가로 스크롤 힌트 */
     .table-scroll-hint {
-      display: none;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 5px;
       font-size: 0.82rem;
       color: var(--primary-light);
       font-weight: 600;
-      margin-bottom: 0.4rem;
-      text-align: right;
-    }
-    @media (max-width: 768px) {
-      .table-scroll-hint {
-        display: block;
-      }
+      margin-bottom: 0.45rem;
     }
 
     .table-responsive {
@@ -416,6 +413,10 @@
     .custom-table .highlight-row { background-color: #eff6ff; font-weight: 700; }
     .custom-table .text-danger { color: var(--danger); font-weight: 700; }
     .custom-table .text-success { color: var(--success); font-weight: 700; }
+    
+    /* 들여쓰기 계층 스타일 */
+    .indent-1 { padding-left: 1.5rem !important; }
+    .indent-2 { padding-left: 2.2rem !important; }
 
     /* 타임라인 */
     .timeline-grid {
@@ -809,7 +810,7 @@
       </div>
     </section>
 
-    <!-- 2. 조직 및 인력 현황 (표 아래 차트 배치로 수정 완료) -->
+    <!-- 2. 조직 및 인력 현황 (본부 구분 가운데 정렬 & 표 아래 차트 배치 완료) -->
     <section id="organization" class="section-card">
       <div class="section-header">
         <div class="section-title">
@@ -829,51 +830,50 @@
         <strong>직종별 정/현원:</strong> 연구직 75(70), 통계직 12(11), 행정직 21(21), 운영직 30(29), 별도정원 4(4)
       </div>
 
-      <!-- 상단: 전체 너비 조직 표 -->
       <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
       <div class="table-responsive">
         <table class="custom-table">
           <thead>
             <tr>
-              <th>본부 구분</th>
-              <th class="text-center">인원</th>
-              <th>소속 부서 및 전담 센터</th>
-              <th>주요 임무</th>
+              <th class="text-center" style="width: 18%;">본부 구분</th>
+              <th class="text-center" style="width: 10%;">인원</th>
+              <th style="width: 37%;">소속 부서 및 전담 센터</th>
+              <th style="width: 35%;">주요 임무</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>경영기획본부</strong></td>
+              <td class="text-center"><strong>경영기획본부</strong></td>
               <td class="text-center"><strong>36명</strong></td>
               <td>기획조정실(12), 경영지원실(23)<br>[팀] 연구기획(6), 성과확산(5), 인재개발(8), 총무회계(11), 정보사업(3)</td>
               <td>기관 경영전략, 예산·인사·회계, 성과관리, 정보화 총괄</td>
             </tr>
             <tr>
-              <td><strong>문화연구본부</strong></td>
+              <td class="text-center"><strong>문화연구본부</strong></td>
               <td class="text-center"><strong>32명</strong></td>
               <td>문화예술정책연구실(16), 문화예술가치확산연구실(12)<br>• <strong>문화영향평가단</strong> (5명, 겸직 5명)</td>
               <td>문화예술 진흥, 문화복지·환경, 문화영향평가 법정 전담</td>
             </tr>
             <tr>
-              <td><strong>관광연구본부</strong></td>
+              <td class="text-center"><strong>관광연구본부</strong></td>
               <td class="text-center"><strong>36명</strong></td>
               <td>관광정책연구실(13), 관광산업연구실(13)<br>• <strong>지역관광개발관리센터</strong> (11명, 겸직 2명)</td>
               <td>관광 정책·산업 진흥, 광역·지역관광개발 사업평가 및 컨설팅</td>
             </tr>
             <tr>
-              <td><strong>콘텐츠연구본부</strong></td>
+              <td class="text-center"><strong>콘텐츠연구본부</strong></td>
               <td class="text-center"><strong>11명</strong></td>
               <td>• <strong>한류경제연구센터</strong> (6명, 겸직 3명)</td>
               <td>콘텐츠산업 육성, 정책펀드, 글로벌 진출, 한류 경제효과 분석</td>
             </tr>
             <tr>
-              <td><strong>데이터정책본부</strong></td>
+              <td class="text-center"><strong>데이터정책본부</strong></td>
               <td class="text-center"><strong>18명</strong></td>
               <td>데이터전략실(17)<br>• <strong>데이터분석단</strong> (2명, 겸직 2명)</td>
               <td>국가승인통계(9종) 생산, AI 합성데이터, 동향분석 및 플랫폼 운영</td>
             </tr>
             <tr>
-              <td><strong>감사실</strong></td>
+              <td class="text-center"><strong>감사실</strong></td>
               <td class="text-center"><strong>2명</strong></td>
               <td>원장 직속 감사실</td>
               <td>기관 내부감사, 청렴 및 윤리경영 관리</td>
@@ -882,7 +882,7 @@
         </table>
       </div>
 
-      <!-- 하단: 표 아래에 배치된 도넛 차트 컨테이너 -->
+      <!-- 표 아래 배치된 도넛 차트 컨테이너 -->
       <div style="max-width: 680px; margin: 1.5rem auto 0; background: #f8fafc; border: 1px solid var(--border-light); border-radius: 12px; padding: 1.2rem;">
         <h4 style="font-size: 0.98rem; font-weight:700; text-align: center; margin-bottom: 0.8rem; color: #334155;">
           <i class="fa-solid fa-chart-pie" style="color: var(--primary-light);"></i> 본부별 인력 구성 분포도 (현원 136명 기준)
@@ -974,102 +974,165 @@
         </div>
       </div>
 
+      <!-- 2025 vs 2026 지출예산 상세 비교 표 (계층 및 구분 완벽 수정) -->
       <h3 class="sub-title" style="margin-top: 2rem;"><i class="fa-solid fa-table-list"></i> 2025 vs 2026 지출예산 상세 비교 (단위: 백만 원, %)</h3>
       <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
       <div class="table-responsive">
         <table class="custom-table">
           <thead>
             <tr>
-              <th>구분</th>
-              <th class="text-right">2025년 예산</th>
-              <th class="text-center">비중</th>
-              <th class="text-right">2026년 예산</th>
-              <th class="text-center">비중</th>
-              <th class="text-right">증감액</th>
-              <th class="text-center">증감률</th>
-              <th>세부 내역 및 주요 변동 요인</th>
+              <th style="min-width: 240px;">지출 항목 구분</th>
+              <th class="text-right" style="min-width: 100px;">2025년 예산</th>
+              <th class="text-right" style="min-width: 100px;">2026년 예산</th>
+              <th class="text-right" style="min-width: 90px;">증감액</th>
+              <th class="text-center" style="min-width: 80px;">증감률</th>
+              <th style="min-width: 260px;">세부 내역 및 사업 내용</th>
             </tr>
           </thead>
           <tbody>
             <tr class="highlight-row">
-              <td><strong>합계</strong></td>
-              <td class="text-right">29,098</td>
-              <td class="text-center">100.0%</td>
-              <td class="text-right">29,596</td>
-              <td class="text-center">100.0%</td>
-              <td class="text-right">+498</td>
-              <td class="text-center">+1.7%</td>
-              <td>수입 증대(개별출연)에 따른 총 규모 소폭 확장</td>
+              <td><strong>총 지출 합계</strong></td>
+              <td class="text-right"><strong>29,098</strong></td>
+              <td class="text-right"><strong>29,596</strong></td>
+              <td class="text-right"><strong>+498</strong></td>
+              <td class="text-center text-success"><strong>+1.7%</strong></td>
+              <td><strong>총 지출 규모 소폭 확대</strong></td>
             </tr>
-            <tr>
-              <td><strong>연구사업비 (일반)</strong></td>
+
+            <!-- 1. 연구사업비 계층 -->
+            <tr style="background-color: #f1f5f9; font-weight: 700;">
+              <td>1. 연구사업비 (일반)</td>
               <td class="text-right">3,337</td>
-              <td class="text-center">11.5%</td>
               <td class="text-right">3,003</td>
-              <td class="text-center">10.2%</td>
               <td class="text-right text-danger">△334</td>
               <td class="text-center text-danger">△10.0%</td>
-              <td>기본연구사업 993백만(△16.4%), 연구관련 536, 연구지원 1,474</td>
+              <td>정부출연금 연구사업 총계</td>
             </tr>
             <tr>
-              <td><strong>수탁연구비 (자체)</strong></td>
+              <td class="indent-1">가. 기본연구사업</td>
+              <td class="text-right">1,188</td>
+              <td class="text-right">993</td>
+              <td class="text-right text-danger">△195</td>
+              <td class="text-center text-danger">△16.4%</td>
+              <td>기본연구 779백만, 정책연구사업 214백만</td>
+            </tr>
+            <tr>
+              <td class="indent-2">1) 기본연구사업</td>
+              <td class="text-right">962</td>
+              <td class="text-right">779</td>
+              <td class="text-right text-danger">△183</td>
+              <td class="text-center text-danger">△19.0%</td>
+              <td>기초·정책 과제 직접연구비 (30건x24.3백만)</td>
+            </tr>
+            <tr>
+              <td class="indent-2">2) 정책연구사업</td>
+              <td class="text-right">226</td>
+              <td class="text-right">214</td>
+              <td class="text-right text-danger">△12</td>
+              <td class="text-center text-danger">△5.3%</td>
+              <td>지역관광평가, 문체관광산업통계</td>
+            </tr>
+            <tr>
+              <td class="indent-1">나. 연구관련사업</td>
+              <td class="text-right">601</td>
+              <td class="text-right">536</td>
+              <td class="text-right text-danger">△65</td>
+              <td class="text-center text-danger">△10.8%</td>
+              <td>정책토론 184, 간행물 154, 데이터분석 198</td>
+            </tr>
+            <tr>
+              <td class="indent-1">다. 연구지원사업</td>
+              <td class="text-right">1,548</td>
+              <td class="text-right">1,474</td>
+              <td class="text-right text-danger">△74</td>
+              <td class="text-center text-danger">△4.8%</td>
+              <td>연구운영지원 356, 연구정보서비스 1,118</td>
+            </tr>
+
+            <!-- 2. 수탁용역사업비 계층 -->
+            <tr style="background-color: #f1f5f9; font-weight: 700;">
+              <td>2. 수탁 및 보조 사업비</td>
+              <td class="text-right">11,734</td>
+              <td class="text-right">12,118</td>
+              <td class="text-right text-success">+384</td>
+              <td class="text-center text-success">+3.3%</td>
+              <td>수탁연구 및 개별출연(보조) 합계</td>
+            </tr>
+            <tr>
+              <td class="indent-1">가. 수탁연구사업비 (자체)</td>
               <td class="text-right">6,113</td>
-              <td class="text-center">21.0%</td>
               <td class="text-right">4,847</td>
-              <td class="text-center">16.4%</td>
               <td class="text-right text-danger">△1,266</td>
               <td class="text-center text-danger">△20.7%</td>
-              <td>수탁사업 직접경비 4,577백만, 간접경비 270백만</td>
+              <td>직접경비 4,577백만, 간접경비 270백만</td>
             </tr>
             <tr>
-              <td><strong>개별출연사업비 (기금)</strong></td>
+              <td class="indent-1">나. 개별출연사업비 (기금)</td>
               <td class="text-right">5,621</td>
-              <td class="text-center">19.3%</td>
               <td class="text-right">7,271</td>
-              <td class="text-center">24.6%</td>
               <td class="text-right text-success">+1,650</td>
               <td class="text-center text-success">+29.4%</td>
-              <td>관광통계개선(32.15억), 문화영향평가(14.5억), 광역관광 성과관리 등</td>
+              <td>관광통계개선(32.15억), 문화영향평가 등</td>
             </tr>
-            <tr>
-              <td><strong>인 건 비</strong></td>
+
+            <!-- 3. 인건비 계층 -->
+            <tr style="background-color: #f1f5f9; font-weight: 700;">
+              <td>3. 인건비</td>
               <td class="text-right">10,883</td>
-              <td class="text-center">37.4%</td>
               <td class="text-right">11,265</td>
-              <td class="text-center">38.0%</td>
               <td class="text-right text-success">+382</td>
-              <td class="text-center">+3.5%</td>
-              <td>일반회계 8,445백만(보수 73.97억, 운영직 10.48억), 자체 2,820백만</td>
+              <td class="text-center text-success">+3.5%</td>
+              <td>일반회계 8,445백만, 자체수입 2,820백만</td>
             </tr>
             <tr>
-              <td><strong>경 상 비</strong></td>
+              <td class="indent-1">1) 보수 (정규직)</td>
+              <td class="text-right">9,757</td>
+              <td class="text-right">10,077</td>
+              <td class="text-right text-success">+320</td>
+              <td class="text-center text-success">+3.3%</td>
+              <td>연구·통계·행정직 기본급 및 수당</td>
+            </tr>
+            <tr>
+              <td class="indent-1">2) 상용임금 (운영직)</td>
+              <td class="text-right">1,041</td>
+              <td class="text-right">1,098</td>
+              <td class="text-right text-success">+57</td>
+              <td class="text-center text-success">+5.5%</td>
+              <td>무기계약직(운영직) 보수</td>
+            </tr>
+            <tr>
+              <td class="indent-1">3) 기타직 인건비</td>
+              <td class="text-right">85</td>
+              <td class="text-right">90</td>
+              <td class="text-right text-success">+5</td>
+              <td class="text-center text-success">+5.9%</td>
+              <td>기타 계약인력 보수</td>
+            </tr>
+
+            <!-- 4. 경상비, 예비비, 적립금 -->
+            <tr style="background-color: #f1f5f9; font-weight: 700;">
+              <td>4. 경상비</td>
               <td class="text-right">1,911</td>
-              <td class="text-center">6.6%</td>
               <td class="text-right">1,914</td>
-              <td class="text-center">6.4%</td>
               <td class="text-right">+3</td>
               <td class="text-center">+0.2%</td>
-              <td>일반회계 1,074백만(임차료 2.19억, 청사관리 4.4억, 수용비 등 2.86억)</td>
+              <td>일반 1,074백만(임차료 2.19억 등), 자체 840백만</td>
             </tr>
-            <tr>
-              <td><strong>예 비 비</strong></td>
+            <tr style="background-color: #f1f5f9; font-weight: 700;">
+              <td>5. 예비비</td>
               <td class="text-right">800</td>
-              <td class="text-center">2.7%</td>
               <td class="text-right">800</td>
-              <td class="text-center">2.7%</td>
               <td class="text-right">-</td>
               <td class="text-center">0.0%</td>
               <td>예비비 편성 유지</td>
             </tr>
-            <tr>
-              <td><strong>연구개발적립금</strong></td>
+            <tr style="background-color: #f1f5f9; font-weight: 700;">
+              <td>6. 연구개발적립금</td>
               <td class="text-right">433</td>
-              <td class="text-center">1.5%</td>
               <td class="text-right">496</td>
-              <td class="text-center">1.7%</td>
-              <td class="text-right">+63</td>
-              <td class="text-center">+14.5%</td>
-              <td>적립금 전입액 확대</td>
+              <td class="text-right text-success">+63</td>
+              <td class="text-center text-success">+14.5%</td>
+              <td>R&D 적립금 전입 확대</td>
             </tr>
           </tbody>
         </table>
@@ -1547,7 +1610,7 @@
         </li>
       </ul>
 
-      <!-- [붙임 2 & 3] 통계 및 평가 상세 표 -->
+      <!-- [붙임 2 & 3] 통계 및 평가 상세 표 (좌우 스크롤 힌트 및 반응형 래퍼 완벽 적용) -->
       <div class="grid-2" style="margin-top: 2rem;">
         <div>
           <h3 class="sub-title" style="margin-top:0;"><i class="fa-solid fa-chart-column"></i> [붙임 2] 국가승인통계 9종 상세</h3>
@@ -1556,32 +1619,32 @@
             <table class="custom-table">
               <thead>
                 <tr>
-                  <th>분야</th>
-                  <th>통계명</th>
-                  <th>근거 법령 상세</th>
+                  <th class="text-center" style="width: 25%;">분야</th>
+                  <th style="width: 40%;">통계명</th>
+                  <th style="width: 35%;">근거 법령 상세</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>종합</strong></td>
+                  <td class="text-center"><strong>종합</strong></td>
                   <td>문화체육관광 일자리현황조사</td>
                   <td>「통계법」 제18조(통계작성의 승인)</td>
                 </tr>
                 <tr>
-                  <td rowspan="3"><strong>문화</strong></td>
+                  <td rowspan="3" class="text-center"><strong>문화</strong></td>
                   <td>국민문화예술활동조사</td>
-                  <td>「문화기본법」 제11조(문화 진흥을 위한 조사·연구)</td>
+                  <td>「문화기본법」 제11조(조사·연구)</td>
                 </tr>
                 <tr>
                   <td>국민여가활동조사</td>
-                  <td>「국민여가활성화기본법」 제8조(조사 및 연구)</td>
+                  <td>「국민여가활성화기본법」 제8조</td>
                 </tr>
                 <tr>
                   <td>근로자휴가조사</td>
-                  <td>「국민여가활성화기본법」 제8조(조사 및 연구)</td>
+                  <td>「국민여가활성화기본법」 제8조</td>
                 </tr>
                 <tr>
-                  <td rowspan="4"><strong>관광</strong></td>
+                  <td rowspan="4" class="text-center"><strong>관광</strong></td>
                   <td>국민여행조사</td>
                   <td>「관광진흥법」 제47조의2(관광통계)</td>
                 </tr>
@@ -1598,7 +1661,7 @@
                   <td>「관광진흥법」 제47조의2(관광통계)</td>
                 </tr>
                 <tr>
-                  <td><strong>원 승인</strong></td>
+                  <td class="text-center"><strong>원 승인</strong></td>
                   <td>문화체육관광산업통계</td>
                   <td>「통계법」 제18조(통계작성의 승인)</td>
                 </tr>
@@ -1614,32 +1677,32 @@
             <table class="custom-table">
               <thead>
                 <tr>
-                  <th>분야</th>
-                  <th>평가명</th>
-                  <th>근거 법령 및 지정 현황</th>
+                  <th class="text-center" style="width: 25%;">분야</th>
+                  <th style="width: 35%;">평가명</th>
+                  <th style="width: 40%;">근거 법령 및 지정 현황</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>문화</strong></td>
+                  <td class="text-center"><strong>문화</strong></td>
                   <td><strong>문화영향평가</strong></td>
-                  <td>「문화기본법」 제9조의4 및 시행령 제6조의4<br>• 지정기간: 2026.3.26 ~ 2029.3.25</td>
+                  <td>「문화기본법」 제9조의4<br>• 지정기간: '26.3.26 ~ '29.3.25</td>
                 </tr>
                 <tr>
-                  <td><strong>관광</strong></td>
+                  <td class="text-center"><strong>관광</strong></td>
                   <td><strong>관광특구평가</strong></td>
-                  <td>「관광진흥법」 시행령 제58조의2(조사·분석 전문기관)<br>• 문화기본법에 따른 한국문화관광연구원 명시</td>
+                  <td>「관광진흥법」 시행령 제58조의2<br>• 법상 조사·분석 전문기관 명시</td>
                 </tr>
                 <tr>
-                  <td><strong>관광</strong></td>
+                  <td class="text-center"><strong>관광</strong></td>
                   <td><strong>지역관광개발사업평가</strong></td>
-                  <td>「관광진흥법」 제76조의3 신설 가결('26.3.31)<br>• 시행령 전담기관 지정 협의 중(하반기)</td>
+                  <td>「관광진흥법」 제76조의3 신설('26.3)<br>• 시행령 전담기관 지정 협의 중</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <!-- [붙임 4] 기본연구과제 유형별 요약 -->
+          <!-- [붙임 4] 기본연구과제 유형별 요약 (좌우 스크롤 래퍼 적용) -->
           <h3 class="sub-title" style="margin-top:1.5rem;"><i class="fa-solid fa-layer-group"></i> [붙임 4] 연구과제 유형 및 단가</h3>
           <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
           <div class="table-responsive">
@@ -1647,7 +1710,7 @@
               <thead>
                 <tr>
                   <th>유형</th>
-                  <th>기간</th>
+                  <th class="text-center">기간</th>
                   <th class="text-right">'26 단가</th>
                   <th class="text-center">'26 건수</th>
                   <th>재원 구분</th>
@@ -1656,35 +1719,35 @@
               <tbody>
                 <tr>
                   <td><strong>기초연구</strong></td>
-                  <td>10개월</td>
+                  <td class="text-center">10개월</td>
                   <td class="text-right">2,400만</td>
                   <td class="text-center">6건</td>
                   <td>출연금(일반)</td>
                 </tr>
                 <tr>
                   <td><strong>정책연구</strong></td>
-                  <td>8개월</td>
+                  <td class="text-center">8개월</td>
                   <td class="text-right">2,000만</td>
                   <td class="text-center">24건</td>
                   <td>출연금(일반)</td>
                 </tr>
                 <tr>
                   <td><strong>수시연구</strong></td>
-                  <td>5개월</td>
+                  <td class="text-center">5개월</td>
                   <td class="text-right">1,000만</td>
                   <td class="text-center">9건</td>
                   <td>R&D적립금</td>
                 </tr>
                 <tr>
                   <td><strong>현안연구</strong></td>
-                  <td>3개월</td>
+                  <td class="text-center">3개월</td>
                   <td class="text-right">800만</td>
                   <td class="text-center">11건</td>
                   <td>R&D적립금</td>
                 </tr>
                 <tr>
                   <td><strong>정책리포트</strong></td>
-                  <td>1개월</td>
+                  <td class="text-center">1개월</td>
                   <td class="text-right">150만</td>
                   <td class="text-center">8건</td>
                   <td>R&D적립금</td>
