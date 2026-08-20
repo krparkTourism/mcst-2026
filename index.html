@@ -2,17 +2,24 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="한국문화관광연구원(KCTI) 현황 및 주요 현안 대시보드 - 문화예술·관광·콘텐츠 정책 연구의 국가 싱크탱크">
+  <meta name="theme-color" content="#1e3a8a">
   <title>한국문화관광연구원(KCTI) 현황 및 주요 현안 대시보드</title>
+
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <!-- Google Fonts (Pretendard) & Font Awesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
+    /* ============================================
+       DESIGN TOKENS
+       ============================================ */
     :root {
       --primary: #1e3a8a;
       --primary-dark: #0f172a;
@@ -20,43 +27,67 @@
       --primary-bg: #eff6ff;
       --accent: #d97706;
       --accent-light: #fef3c7;
-      --bg-body: #f8fafc;
+      --bg-body: #f5f7fb;
       --bg-card: #ffffff;
+      --bg-soft: #f8fafc;
       --text-main: #0f172a;
       --text-sub: #334155;
       --text-muted: #64748b;
-      --border: #cbd5e1;
-      --border-light: #e2e8f0;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
       --danger: #dc2626;
       --danger-bg: #fef2f2;
       --success: #16a34a;
       --success-bg: #f0fdf4;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-      --shadow: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
-      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+      --shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -3px rgba(15, 23, 42, 0.05);
+      --shadow-lg: 0 12px 24px -6px rgba(15, 23, 42, 0.12);
+
+      --radius-sm: 8px;
+      --radius: 12px;
+      --radius-lg: 16px;
+
+      /* 반응형 타이포 (clamp) - PC/모바일 유연하게 확장 */
+      --fs-hero-title: clamp(1.6rem, 1.15rem + 2.2vw, 2.6rem);
+      --fs-hero-sub: clamp(0.95rem, 0.85rem + 0.45vw, 1.15rem);
+      --fs-section-title: clamp(1.15rem, 1rem + 0.65vw, 1.5rem);
+      --fs-kpi-value: clamp(1.4rem, 1.1rem + 1.2vw, 1.95rem);
+      --fs-table: clamp(0.85rem, 0.8rem + 0.2vw, 0.95rem);
+      --fs-body: clamp(0.92rem, 0.88rem + 0.2vw, 1rem);
     }
 
-    * {
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-      -webkit-tap-highlight-color: transparent;
     }
 
     html {
       scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
     }
 
     body {
+      font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
       background-color: var(--bg-body);
       color: var(--text-main);
       line-height: 1.65;
-      font-size: 16px;
+      font-size: var(--fs-body);
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
       overflow-x: hidden;
     }
 
-    /* 상단 네비게이션 바 */
+    img { max-width: 100%; height: auto; }
+    a { color: inherit; }
+
+    /* ============================================
+       NAVBAR
+       ============================================ */
     .navbar {
       background-color: #ffffff;
       border-bottom: 1px solid var(--border);
@@ -68,95 +99,155 @@
     .nav-container {
       max-width: 1320px;
       margin: 0 auto;
-      padding: 0.75rem 1.2rem;
+      padding: 0.7rem 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
     }
     .nav-logo {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       text-decoration: none;
       color: var(--primary);
       font-weight: 800;
-      font-size: 1.15rem;
+      font-size: clamp(0.95rem, 0.85rem + 0.4vw, 1.15rem);
       white-space: nowrap;
+      flex-shrink: 0;
     }
     .nav-logo i {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       color: var(--primary-light);
     }
     .nav-links {
       display: flex;
-      gap: 1.2rem;
+      gap: 1.1rem;
       align-items: center;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
     }
-    .nav-links::-webkit-scrollbar {
-      display: none;
-    }
-    .nav-links a {
+    .nav-links a:not(.btn-kcti) {
       text-decoration: none;
       color: var(--text-sub);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 600;
       white-space: nowrap;
+      padding: 0.4rem 0;
       transition: color 0.2s;
+      border-bottom: 2px solid transparent;
     }
-    .nav-links a:hover {
+    .nav-links a:not(.btn-kcti):hover {
       color: var(--primary-light);
+      border-bottom-color: var(--primary-light);
     }
     .btn-kcti {
       background-color: var(--primary);
       color: #fff !important;
-      padding: 0.45rem 0.9rem;
-      border-radius: 8px;
+      padding: 0.5rem 0.95rem;
+      border-radius: var(--radius-sm);
       display: inline-flex;
       align-items: center;
       gap: 6px;
       font-weight: 700 !important;
-      font-size: 0.88rem !important;
+      font-size: 0.85rem !important;
       white-space: nowrap;
+      text-decoration: none;
+      transition: background-color 0.2s;
     }
-    .btn-kcti:hover {
-      background-color: var(--primary-light);
+    .btn-kcti:hover { background-color: var(--primary-light); }
+
+    /* 모바일 햄버거 메뉴 */
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      color: var(--primary);
+      font-size: 1.15rem;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* 히어로 헤더 */
-    .hero {
-      background: linear-gradient(135deg, #0b1727 0%, #1e3a8a 60%, #1e40af 100%);
-      color: #ffffff;
-      padding: 2.8rem 1.2rem 4rem;
-      text-align: center;
+    @media (max-width: 900px) {
+      .nav-toggle { display: inline-flex; }
+      .nav-links {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        padding: 0.5rem 1rem 1rem;
+        gap: 0;
+        max-height: calc(100vh - 60px);
+        overflow-y: auto;
+        transform: translateY(-120%);
+        transition: transform 0.25s ease;
+        box-shadow: var(--shadow);
+      }
+      .nav-links.open { transform: translateY(0); }
+      .nav-links a:not(.btn-kcti) {
+        padding: 0.85rem 0.4rem;
+        border-bottom: 1px solid var(--border);
+        font-size: 1rem;
+      }
+      .nav-links .btn-kcti {
+        margin-top: 0.75rem;
+        justify-content: center;
+        padding: 0.7rem 1rem;
+        font-size: 0.95rem !important;
+      }
     }
+
+    /* ============================================
+       HERO
+       ============================================ */
+    .hero {
+      background: linear-gradient(135deg, #0b1727 0%, #1e3a8a 55%, #2563eb 100%);
+      color: #ffffff;
+      padding: clamp(2rem, 1rem + 4vw, 3.2rem) 1rem clamp(3rem, 1rem + 6vw, 4.5rem);
+      text-align: center;
+      position: relative;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06), transparent 40%);
+      pointer-events: none;
+    }
+    .hero > * { position: relative; z-index: 1; }
     .hero-tag {
       display: inline-block;
       background: rgba(255,255,255,0.15);
       border: 1px solid rgba(255,255,255,0.3);
-      padding: 0.3rem 0.9rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
+      padding: 0.35rem 0.95rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
       font-weight: 600;
-      margin-bottom: 0.8rem;
-      color: #cbd5e1;
+      margin-bottom: 0.9rem;
+      color: #e2e8f0;
+      backdrop-filter: blur(8px);
     }
     .hero h1 {
-      font-size: 1.95rem;
+      font-size: var(--fs-hero-title);
       font-weight: 900;
-      margin-bottom: 0.6rem;
-      letter-spacing: -0.5px;
-      line-height: 1.35;
+      margin-bottom: 0.7rem;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
       word-break: keep-all;
     }
     .hero p {
-      font-size: 1.05rem;
+      font-size: var(--fs-hero-sub);
       color: #cbd5e1;
       max-width: 820px;
-      margin: 0 auto 1.3rem;
+      margin: 0 auto 1.4rem;
       line-height: 1.55;
       word-break: keep-all;
     }
@@ -172,69 +263,72 @@
       gap: 6px;
       background: rgba(255, 255, 255, 0.14);
       backdrop-filter: blur(8px);
-      padding: 0.4rem 0.85rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
       font-weight: 600;
       border: 1px solid rgba(255, 255, 255, 0.22);
       white-space: nowrap;
     }
 
-    /* 본문 컨테이너 */
+    /* ============================================
+       CONTAINER
+       ============================================ */
     .container {
       max-width: 1320px;
-      margin: -2.8rem auto 3rem;
-      padding: 0 1.2rem;
+      margin: -3rem auto 3rem;
+      padding: 0 clamp(0.75rem, 0.5rem + 1vw, 1.4rem);
+      position: relative;
+      z-index: 2;
     }
 
-    /* KPI 요약 카드 */
+    /* ============================================
+       KPI CARDS
+       ============================================ */
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-      margin-bottom: 1.6rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin-bottom: 1.8rem;
     }
-    @media (min-width: 900px) {
-      .kpi-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.2rem;
-        margin-bottom: 2rem;
-      }
+    @media (min-width: 720px) {
+      .kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.1rem; }
     }
     .kpi-card {
       background: var(--bg-card);
-      border-radius: 14px;
-      padding: 1.3rem 1.1rem;
+      border-radius: var(--radius);
+      padding: 1.15rem 1rem;
       box-shadow: var(--shadow);
-      border: 1px solid var(--border-light);
+      border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       transition: transform 0.2s, box-shadow 0.2s;
+      min-height: 145px;
     }
-    .kpi-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-lg);
-    }
+    .kpi-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
     .kpi-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 0.5rem;
+      gap: 0.5rem;
+      margin-bottom: 0.6rem;
     }
     .kpi-title {
-      font-size: 0.92rem;
+      font-size: 0.88rem;
       font-weight: 700;
       color: var(--text-sub);
+      line-height: 1.35;
     }
     .kpi-icon {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.15rem;
+      font-size: 1.05rem;
+      flex-shrink: 0;
     }
     .kpi-blue { background: #dbeafe; color: #1e40af; }
     .kpi-amber { background: #fef3c7; color: #b45309; }
@@ -242,127 +336,139 @@
     .kpi-purple { background: #f3e8ff; color: #7e22ce; }
 
     .kpi-val {
-      font-size: 1.7rem;
+      font-size: var(--fs-kpi-value);
       font-weight: 900;
       color: var(--primary);
-      line-height: 1.2;
-      margin-bottom: 0.3rem;
+      line-height: 1.15;
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.02em;
+      word-break: keep-all;
     }
     .kpi-sub {
-      font-size: 0.84rem;
+      font-size: 0.8rem;
       font-weight: 500;
       color: var(--text-muted);
       word-break: keep-all;
+      line-height: 1.45;
     }
 
-    /* 섹션 카드 */
+    /* ============================================
+       SECTION CARDS
+       ============================================ */
     .section-card {
       background: var(--bg-card);
-      border-radius: 16px;
-      padding: 1.6rem 1.3rem;
+      border-radius: var(--radius-lg);
+      padding: 1.3rem 1rem;
       box-shadow: var(--shadow);
-      border: 1px solid var(--border-light);
-      margin-bottom: 1.8rem;
+      border: 1px solid var(--border);
+      margin-bottom: 1.5rem;
       scroll-margin-top: 80px;
     }
-    @media (min-width: 768px) {
-      .section-card {
-        padding: 2.2rem 2rem;
-        margin-bottom: 2.2rem;
-      }
+    @media (min-width: 720px) {
+      .section-card { padding: 1.8rem 1.6rem; margin-bottom: 2rem; }
+    }
+    @media (min-width: 1024px) {
+      .section-card { padding: 2.2rem 2rem; }
     }
     .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.8rem;
-      border-bottom: 2px solid var(--border-light);
+      margin-bottom: 1.3rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 2px solid var(--border);
       flex-wrap: wrap;
-      gap: 0.8rem;
+      gap: 0.75rem;
     }
     .section-title {
-      font-size: 1.35rem;
+      font-size: var(--fs-section-title);
       font-weight: 800;
       color: var(--primary);
       display: flex;
       align-items: center;
       gap: 10px;
+      word-break: keep-all;
+      line-height: 1.35;
     }
     .section-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
     .btn-top-small {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      padding: 0.35rem 0.75rem;
-      font-size: 0.82rem;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--text-sub);
-      background: #f8fafc;
+      background: var(--bg-soft);
       border-radius: 6px;
       text-decoration: none;
       transition: all 0.2s;
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-strong);
     }
-    .btn-top-small:hover {
-      background: #e2e8f0;
-      color: var(--primary);
-    }
+    .btn-top-small:hover { background: #e2e8f0; color: var(--primary); }
 
     .sub-title {
-      font-size: 1.12rem;
+      font-size: clamp(1rem, 0.9rem + 0.35vw, 1.15rem);
       font-weight: 700;
       color: #1e293b;
-      margin: 1.5rem 0 0.8rem;
+      margin: 1.6rem 0 0.85rem;
       display: flex;
       align-items: center;
       gap: 8px;
+      word-break: keep-all;
     }
+    .sub-title:first-child { margin-top: 0; }
+
     .callout-box {
-      background-color: #f8fafc;
+      background-color: var(--bg-soft);
       border-left: 4px solid var(--primary-light);
-      border-radius: 8px;
-      padding: 1rem 1.2rem;
+      border-radius: var(--radius-sm);
+      padding: 0.95rem 1.1rem;
       margin-bottom: 1.2rem;
-      font-size: 0.94rem;
+      font-size: 0.92rem;
       color: var(--text-sub);
-      line-height: 1.6;
+      line-height: 1.7;
+      word-break: keep-all;
     }
+    .callout-box strong { color: var(--text-main); }
     .callout-box.warning {
       border-left-color: var(--accent);
       background-color: #fffbeb;
     }
     .callout-box.danger {
       border-left-color: var(--danger);
-      background-color: #fef2f2;
+      background-color: var(--danger-bg);
     }
 
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1.5rem;
+      gap: 1.3rem;
     }
-    @media (min-width: 960px) {
-      .grid-2 {
-        grid-template-columns: 1fr 1fr;
-        gap: 1.8rem;
-      }
+    @media (min-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr 1fr; gap: 1.6rem; }
     }
 
-    /* 모바일 친화적 테이블 스타일 & 가로 스크롤 힌트 */
+    /* ============================================
+       RESPONSIVE TABLES
+       ============================================ */
     .table-scroll-hint {
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: flex-end;
       gap: 5px;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       color: var(--primary-light);
       font-weight: 600;
       margin-bottom: 0.45rem;
+    }
+    @media (max-width: 767px) {
+      .table-scroll-hint { display: flex; }
     }
 
     .table-responsive {
@@ -370,97 +476,138 @@
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: var(--radius);
       margin-bottom: 1.2rem;
       background: #fff;
+      /* 부드러운 우측 그림자 (스크롤 힌트) */
+      background-image:
+        linear-gradient(to right, #fff 30%, rgba(255,255,255,0)),
+        linear-gradient(to right, rgba(255,255,255,0), #fff 70%) 100% 0,
+        linear-gradient(to right, rgba(15,23,42,0.08), rgba(255,255,255,0)),
+        linear-gradient(to left, rgba(15,23,42,0.08), rgba(255,255,255,0)) 100% 0;
+      background-repeat: no-repeat;
+      background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+      background-attachment: local, local, scroll, scroll;
     }
     .custom-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.92rem;
+      font-size: var(--fs-table);
       text-align: left;
-      min-width: 620px;
+      min-width: 560px;
     }
     .custom-table th {
-      background-color: #f8fafc;
-      color: #334155;
+      background-color: var(--bg-soft);
+      color: #1e293b;
       font-weight: 700;
-      padding: 0.85rem 1rem;
-      border-bottom: 2px solid var(--border);
-      border-right: 1px solid var(--border-light);
+      padding: 0.75rem 0.85rem;
+      border-bottom: 2px solid var(--border-strong);
+      border-right: 1px solid var(--border);
       white-space: nowrap;
+      font-size: 0.88rem;
     }
     .custom-table td {
-      padding: 0.85rem 1rem;
-      border-bottom: 1px solid var(--border-light);
-      border-right: 1px solid var(--border-light);
+      padding: 0.75rem 0.85rem;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
       color: var(--text-main);
       vertical-align: middle;
       line-height: 1.55;
+      word-break: keep-all;
     }
-    .custom-table tr:last-child td {
-      border-bottom: none;
-    }
+    .custom-table tr:last-child td { border-bottom: none; }
     .custom-table th:last-child,
-    .custom-table td:last-child {
-      border-right: none;
-    }
-    .custom-table tbody tr:hover {
-      background-color: #f8fafc;
-    }
+    .custom-table td:last-child { border-right: none; }
+    .custom-table tbody tr:hover { background-color: var(--bg-soft); }
     .custom-table .text-center { text-align: center; }
-    .custom-table .text-right { text-align: right; }
-    .custom-table .highlight-row { background-color: #eff6ff; font-weight: 700; }
+    .custom-table .text-right { text-align: right; font-variant-numeric: tabular-nums; }
+    .custom-table .highlight-row {
+      background-color: var(--primary-bg);
+      font-weight: 700;
+    }
+    .custom-table .highlight-row td { color: var(--primary); }
     .custom-table .text-danger { color: var(--danger); font-weight: 700; }
     .custom-table .text-success { color: var(--success); font-weight: 700; }
-    
-    /* 들여쓰기 계층 스타일 */
-    .indent-1 { padding-left: 1.5rem !important; }
-    .indent-2 { padding-left: 2.2rem !important; }
+    .custom-table .group-row {
+      background-color: #f1f5f9 !important;
+      font-weight: 700;
+    }
 
-    /* 타임라인 */
+    /* 들여쓰기 계층 스타일 */
+    .indent-1 { padding-left: 1.4rem !important; }
+    .indent-2 { padding-left: 2.1rem !important; position: relative; }
+    .indent-2::before {
+      content: '';
+      position: absolute;
+      left: 1.5rem;
+      top: 50%;
+      width: 5px;
+      height: 5px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* 모바일에서 테이블 셀 패딩 살짝 축소 */
+    @media (max-width: 480px) {
+      .custom-table th, .custom-table td {
+        padding: 0.6rem 0.65rem;
+      }
+      .indent-1 { padding-left: 1.1rem !important; }
+      .indent-2 { padding-left: 1.7rem !important; }
+      .indent-2::before { left: 1.2rem; }
+    }
+
+    /* ============================================
+       TIMELINE
+       ============================================ */
     .timeline-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
       gap: 0.8rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
     }
     .timeline-item {
-      background: #f8fafc;
-      border: 1px solid var(--border-light);
-      border-radius: 10px;
-      padding: 1rem;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.95rem 1rem;
       border-top: 4px solid var(--primary-light);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .timeline-item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
     }
     .timeline-year {
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 800;
       color: var(--primary-light);
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.35rem;
     }
     .timeline-desc {
       font-size: 0.88rem;
       color: var(--text-sub);
-      line-height: 1.45;
+      line-height: 1.5;
+      word-break: keep-all;
     }
 
-    /* 현안 카드 */
+    /* ============================================
+       ISSUE CARDS
+       ============================================ */
     .issue-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1.4rem;
+      gap: 1.2rem;
     }
     @media (min-width: 860px) {
-      .issue-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-      }
+      .issue-grid { grid-template-columns: repeat(2, 1fr); gap: 1.4rem; }
     }
     .issue-card {
       background: #ffffff;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.4rem;
+      border-radius: var(--radius);
+      padding: 1.3rem 1.15rem;
       box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
@@ -469,68 +616,78 @@
     }
     .issue-card.danger { border-top-color: var(--danger); }
     .issue-card.warning { border-top-color: var(--accent); }
-    
+
     .issue-badge {
       display: inline-block;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 800;
-      padding: 3px 8px;
+      padding: 3px 9px;
       border-radius: 4px;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.7rem;
       background: #f1f5f9;
       color: #334155;
+      letter-spacing: 0.02em;
     }
     .issue-card h4 {
-      font-size: 1.18rem;
+      font-size: clamp(1.05rem, 0.95rem + 0.35vw, 1.2rem);
       font-weight: 800;
       color: var(--primary);
       margin-bottom: 0.7rem;
+      line-height: 1.4;
+      word-break: keep-all;
     }
     .issue-content {
       font-size: 0.92rem;
       color: var(--text-sub);
       margin-bottom: 1rem;
-      line-height: 1.6;
+      line-height: 1.65;
+      word-break: keep-all;
     }
+    .issue-content strong { color: var(--text-main); }
     .issue-content ul {
-      padding-left: 1.2rem;
+      padding-left: 1.15rem;
       margin-top: 0.4rem;
+      margin-bottom: 0.2rem;
     }
-    .issue-content li {
-      margin-bottom: 0.35rem;
-    }
+    .issue-content li { margin-bottom: 0.35rem; }
     .issue-solution {
-      background: #f8fafc;
-      border-radius: 8px;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
       padding: 0.85rem 1rem;
       font-size: 0.88rem;
       border-left: 4px solid var(--primary-light);
       color: var(--text-main);
-      line-height: 1.5;
+      line-height: 1.55;
+      word-break: keep-all;
     }
-    .issue-solution strong {
-      color: var(--primary);
-    }
+    .issue-solution strong { color: var(--primary); }
 
-    /* 연구과제 필터 및 리스트 */
+    /* ============================================
+       RESEARCH FILTER / LIST
+       ============================================ */
     .filter-btn-group {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.45rem;
       margin-bottom: 1rem;
       flex-wrap: wrap;
     }
     .filter-btn {
       background: #f1f5f9;
-      border: 1px solid var(--border);
-      padding: 0.4rem 0.85rem;
-      border-radius: 6px;
-      font-size: 0.85rem;
+      border: 1px solid var(--border-strong);
+      padding: 0.42rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.83rem;
       font-weight: 600;
       cursor: pointer;
       color: var(--text-sub);
       transition: all 0.2s;
+      font-family: inherit;
     }
-    .filter-btn.active, .filter-btn:hover {
+    .filter-btn:hover {
+      background: #e2e8f0;
+      color: var(--primary);
+    }
+    .filter-btn.active {
       background: var(--primary-light);
       color: #fff;
       border-color: var(--primary-light);
@@ -540,57 +697,65 @@
       list-style: none;
       display: grid;
       grid-template-columns: 1fr;
-      gap: 0.6rem;
+      gap: 0.55rem;
       max-height: 480px;
       overflow-y: auto;
-      padding-right: 0.5rem;
+      padding-right: 0.4rem;
     }
     @media (min-width: 768px) {
-      .research-list {
-        grid-template-columns: 1fr 1fr;
-      }
+      .research-list { grid-template-columns: 1fr 1fr; }
     }
+    .research-list::-webkit-scrollbar { width: 8px; }
+    .research-list::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+    .research-list::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+    .research-list::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
     .research-item {
-      background: #f8fafc;
-      border: 1px solid var(--border-light);
-      border-radius: 8px;
-      padding: 0.75rem 0.95rem;
-      font-size: 0.9rem;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.7rem 0.9rem;
+      font-size: 0.88rem;
       display: flex;
       align-items: flex-start;
       gap: 8px;
+      line-height: 1.5;
+      word-break: keep-all;
     }
     .research-tag {
       display: inline-block;
-      font-size: 0.74rem;
+      font-size: 0.7rem;
       font-weight: 700;
-      padding: 2px 6px;
+      padding: 2px 7px;
       border-radius: 4px;
       white-space: nowrap;
       margin-top: 1px;
+      flex-shrink: 0;
     }
     .tag-culture { background: #fce7f3; color: #be185d; }
     .tag-tour { background: #dbeafe; color: #1d4ed8; }
     .tag-contents { background: #ede9fe; color: #6d28d9; }
     .tag-data { background: #cffafe; color: #0e7490; }
 
-    /* 대국민 플랫폼 카드 */
+    /* ============================================
+       PLATFORM CARDS
+       ============================================ */
     .platform-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 1rem;
     }
-    @media (min-width: 768px) {
-      .platform-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.2rem;
-      }
+    @media (min-width: 640px) {
+      .platform-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 900px) {
+      .platform-grid { grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
     }
     .platform-card {
       background: #fff;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.4rem;
+      border-radius: var(--radius);
+      padding: 1.3rem 1.15rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -602,40 +767,43 @@
       box-shadow: var(--shadow);
     }
     .platform-card h4 {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 800;
       color: var(--primary);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.55rem;
       display: flex;
       align-items: center;
       gap: 8px;
+      word-break: keep-all;
+      line-height: 1.35;
     }
     .platform-card p {
       font-size: 0.9rem;
       color: var(--text-sub);
       margin-bottom: 1.1rem;
-      line-height: 1.55;
+      line-height: 1.6;
+      word-break: keep-all;
     }
     .platform-link {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       font-weight: 700;
       color: var(--primary-light);
       text-decoration: none;
     }
-    .platform-link:hover {
-      text-decoration: underline;
-    }
+    .platform-link:hover { text-decoration: underline; }
 
-    /* 플로팅 Top 버튼 */
+    /* ============================================
+       FLOATING TOP BUTTON
+       ============================================ */
     .floating-top-btn {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
-      width: 48px;
-      height: 48px;
+      bottom: 20px;
+      right: 20px;
+      width: 46px;
+      height: 46px;
       background-color: var(--primary);
       color: #ffffff;
       border-radius: 50%;
@@ -644,70 +812,105 @@
       justify-content: center;
       box-shadow: var(--shadow-lg);
       text-decoration: none;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       z-index: 999;
       opacity: 0;
       visibility: hidden;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .floating-top-btn.show {
-      opacity: 0.95;
-      visibility: visible;
-    }
+    .floating-top-btn.show { opacity: 0.95; visibility: visible; }
     .floating-top-btn:hover {
       background-color: var(--primary-light);
       transform: translateY(-3px);
       opacity: 1;
     }
 
-    /* 푸터 */
+    /* ============================================
+       FOOTER
+       ============================================ */
     footer {
       background: #0f172a;
       color: #94a3b8;
-      padding: 2.5rem 1.2rem;
+      padding: 2.2rem 1rem;
       text-align: center;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
     }
     footer a {
       color: #cbd5e1;
       text-decoration: none;
       font-weight: 600;
     }
-    footer a:hover {
-      text-decoration: underline;
-    }
+    footer a:hover { text-decoration: underline; }
+    .footer-inner { max-width: 1320px; margin: 0 auto; }
+    .footer-inner p { word-break: keep-all; line-height: 1.7; }
 
+    /* ============================================
+       CHART BOX
+       ============================================ */
     .chart-box {
       position: relative;
       height: 260px;
       width: 100%;
     }
-    @media (min-width: 768px) {
-      .chart-box {
-        height: 280px;
-      }
+    @media (min-width: 768px) { .chart-box { height: 280px; } }
+
+    .chart-wrap {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem;
+    }
+    .chart-wrap h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 0.8rem;
+      color: #334155;
+    }
+
+    /* 접근성 - 포커스 표시 */
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--primary-light);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* 모션 감소 선호 사용자 대응 */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.001s !important; transition-duration: 0.001s !important; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* 인쇄 스타일 */
+    @media print {
+      .navbar, .floating-top-btn, .btn-top-small, .filter-btn-group { display: none !important; }
+      .section-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+      .hero { background: #1e3a8a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
   </style>
 </head>
 <body id="top">
 
   <!-- 상단 네비게이션 -->
-  <nav class="navbar">
+  <nav class="navbar" aria-label="주요 섹션">
     <div class="nav-container">
       <a href="#top" class="nav-logo">
-        <i class="fa-solid fa-landmark-dome"></i>
+        <i class="fa-solid fa-landmark-dome" aria-hidden="true"></i>
         <span>한국문화관광연구원 KCTI</span>
       </a>
-      <div class="nav-links">
+      <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="navLinks">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      </button>
+      <div class="nav-links" id="navLinks">
         <a href="#overview">기관개요</a>
         <a href="#organization">조직/인력</a>
         <a href="#budget">예산현황</a>
         <a href="#research">주요사업</a>
         <a href="#issues">핵심현안</a>
-        <a href="#appendix">붙임자료(연구/통계)</a>
+        <a href="#appendix">붙임자료</a>
         <a href="#platforms">데이터서비스</a>
-        <a href="https://www.kcti.re.kr" target="_blank" class="btn-kcti">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i> KCTI 공식홈
+        <a href="https://www.kcti.re.kr" target="_blank" rel="noopener" class="btn-kcti">
+          <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> KCTI 공식홈
         </a>
       </div>
     </div>
@@ -715,14 +918,14 @@
 
   <!-- 히어로 헤더 -->
   <header class="hero">
-    <div class="hero-tag"><i class="fa-solid fa-building-columns"></i> 문화체육관광부 소관 연구개발목적기관</div>
+    <div class="hero-tag"><i class="fa-solid fa-building-columns" aria-hidden="true"></i> 문화체육관광부 소관 연구개발목적기관</div>
     <h1>한국문화관광연구원 현황 및 주요 현안</h1>
-    <p>문화예술·관광·콘텐츠 정책 연구의 국가 싱크탱크 | 문체부 데이터분석센터</p>
+    <p>문화예술·관광·콘텐츠 정책 연구의 국가 싱크탱크 · 문체부 데이터분석센터</p>
     <div class="badge-bar">
-      <span class="badge"><i class="fa-solid fa-scale-balanced"></i> 문화기본법 제11조의2</span>
-      <span class="badge"><i class="fa-solid fa-users"></i> 정원 143명 / 현원 136명</span>
-      <span class="badge"><i class="fa-solid fa-coins"></i> 2026 예산 295.96억 원</span>
-      <span class="badge"><i class="fa-solid fa-chart-line"></i> 국가승인통계 9종 생산</span>
+      <span class="badge"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> 문화기본법 제11조의2</span>
+      <span class="badge"><i class="fa-solid fa-users" aria-hidden="true"></i> 정원 143명 / 현원 136명</span>
+      <span class="badge"><i class="fa-solid fa-coins" aria-hidden="true"></i> 2026 예산 295.96억 원</span>
+      <span class="badge"><i class="fa-solid fa-chart-line" aria-hidden="true"></i> 국가승인통계 9종 생산</span>
     </div>
   </header>
 
@@ -730,11 +933,11 @@
   <main class="container">
 
     <!-- KPI 요약 카드 -->
-    <div class="kpi-grid">
+    <section class="kpi-grid" aria-label="핵심 지표">
       <div class="kpi-card">
         <div class="kpi-header">
           <span class="kpi-title">2026년 총예산</span>
-          <div class="kpi-icon kpi-blue"><i class="fa-solid fa-wallet"></i></div>
+          <div class="kpi-icon kpi-blue"><i class="fa-solid fa-wallet" aria-hidden="true"></i></div>
         </div>
         <div class="kpi-val">295.96억</div>
         <div class="kpi-sub">전년(290.98억) 대비 +1.7% 증액</div>
@@ -743,49 +946,49 @@
       <div class="kpi-card">
         <div class="kpi-header">
           <span class="kpi-title">조직 및 인력</span>
-          <div class="kpi-icon kpi-amber"><i class="fa-solid fa-users-gear"></i></div>
+          <div class="kpi-icon kpi-amber"><i class="fa-solid fa-users-gear" aria-hidden="true"></i></div>
         </div>
         <div class="kpi-val">143 / 136명</div>
-        <div class="kpi-sub">연구직 70명, 통계 11, 행정 21, 운영 29</div>
+        <div class="kpi-sub">연구직 70, 통계 11, 행정 21, 운영 29</div>
       </div>
 
       <div class="kpi-card">
         <div class="kpi-header">
           <span class="kpi-title">연간 기본연구</span>
-          <div class="kpi-icon kpi-green"><i class="fa-solid fa-book-open-reader"></i></div>
+          <div class="kpi-icon kpi-green"><i class="fa-solid fa-book-open-reader" aria-hidden="true"></i></div>
         </div>
-        <div class="kpi-val">39건 + 20건</div>
-        <div class="kpi-sub">기초 6, 정책 24, 수시 9, 현안 등 20건</div>
+        <div class="kpi-val">39 + 20건</div>
+        <div class="kpi-sub">기초 6 · 정책 24 · 수시 9 · 현안 등 20건</div>
       </div>
 
       <div class="kpi-card">
         <div class="kpi-header">
-          <span class="kpi-title">법정 통계 & 평가</span>
-          <div class="kpi-icon kpi-purple"><i class="fa-solid fa-square-poll-vertical"></i></div>
+          <span class="kpi-title">법정 통계 &amp; 평가</span>
+          <div class="kpi-icon kpi-purple"><i class="fa-solid fa-square-poll-vertical" aria-hidden="true"></i></div>
         </div>
         <div class="kpi-val">9종 / 3건</div>
         <div class="kpi-sub">국가승인통계 9종, 문화영향평가 전담</div>
       </div>
-    </div>
+    </section>
 
     <!-- 1. 기관 개요 및 연혁 -->
     <section id="overview" class="section-card">
       <div class="section-header">
-        <div class="section-title">
-          <i class="fa-solid fa-landmark" style="color: var(--primary-light);"></i>
+        <h2 class="section-title">
+          <i class="fa-solid fa-landmark" style="color: var(--primary-light);" aria-hidden="true"></i>
           Ⅰ. 연구원 개요 및 설립 근거
-        </div>
+        </h2>
         <div class="section-actions">
-          <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up"></i> Top</a>
+          <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> Top</a>
         </div>
       </div>
 
       <div class="callout-box">
         <strong>설립 근거:</strong> 「문화기본법」 제11조의2 (한국문화관광연구원의 설립, 2016.5. 본조 신설)<br>
-        <strong>기관 성격:</strong> 공공기관운영법상 연구개발목적기관 (2019.1. 지정) | 데이터기반행정법상 문체부 데이터분석센터 (2020.12. 지정)
+        <strong>기관 성격:</strong> 공공기관운영법상 연구개발목적기관 (2019.1. 지정) · 데이터기반행정법상 문체부 데이터분석센터 (2020.12. 지정)
       </div>
 
-      <h3 class="sub-title"><i class="fa-solid fa-clock-rotate-left"></i> 주요 연혁</h3>
+      <h3 class="sub-title"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> 주요 연혁</h3>
       <div class="timeline-grid">
         <div class="timeline-item">
           <div class="timeline-year">1987.02 / 1987.04</div>
@@ -797,7 +1000,7 @@
         </div>
         <div class="timeline-item">
           <div class="timeline-year">2002.12 / 2007.02</div>
-          <div class="timeline-desc">양 기관 통합 개원 (한국문화관광정책연구원) ➔ 한국문화관광연구원으로 명칭 변경</div>
+          <div class="timeline-desc">양 기관 통합 개원(한국문화관광정책연구원) → 한국문화관광연구원으로 명칭 변경</div>
         </div>
         <div class="timeline-item">
           <div class="timeline-year">2016.05</div>
@@ -805,32 +1008,32 @@
         </div>
         <div class="timeline-item">
           <div class="timeline-year">2021.05 / 2024.12</div>
-          <div class="timeline-desc">예산 출연금 전환 ➔ 운영지원 예산 일반회계로 이관 완료</div>
+          <div class="timeline-desc">예산 출연금 전환 → 운영지원 예산 일반회계로 이관 완료</div>
         </div>
       </div>
     </section>
 
-    <!-- 2. 조직 및 인력 현황 (본부 구분 가운데 정렬 & 표 아래 차트 배치 완료) -->
+    <!-- 2. 조직 및 인력 현황 -->
     <section id="organization" class="section-card">
       <div class="section-header">
-        <div class="section-title">
-          <i class="fa-solid fa-sitemap" style="color: var(--primary-light);"></i>
+        <h2 class="section-title">
+          <i class="fa-solid fa-sitemap" style="color: var(--primary-light);" aria-hidden="true"></i>
           Ⅱ. 조직 및 인력 현황 (5개 본부·1실 체제)
-        </div>
+        </h2>
         <div class="section-actions">
-          <a href="https://www.kcti.re.kr/introduce/organization.do" target="_blank" class="platform-link" style="font-size:0.85rem;">
-            조직도 자세히보기 <i class="fa-solid fa-angle-right"></i>
+          <a href="https://www.kcti.re.kr/introduce/organization.do" target="_blank" rel="noopener" class="btn-top-small">
+            조직도 <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
           </a>
-          <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up"></i> Top</a>
+          <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> Top</a>
         </div>
       </div>
 
       <div class="callout-box">
-        <strong>정·현원 현황:</strong> 정원 143명 (원장 포함) / 현원 136명 (임금피크제 4명 포함) ('26.8.21. 기준)<br>
+        <strong>정·현원 현황:</strong> 정원 143명(원장 포함) / 현원 136명(임금피크제 4명 포함) — '26.8.21. 기준<br>
         <strong>직종별 정/현원:</strong> 연구직 75(70), 통계직 12(11), 행정직 21(21), 운영직 30(29), 별도정원 4(4)
       </div>
 
-      <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
+      <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> 좌우로 스크롤 가능</div>
       <div class="table-responsive">
         <table class="custom-table">
           <thead>
@@ -882,12 +1085,10 @@
         </table>
       </div>
 
-      <!-- 표 아래 배치된 도넛 차트 컨테이너 -->
-      <div style="max-width: 680px; margin: 1.5rem auto 0; background: #f8fafc; border: 1px solid var(--border-light); border-radius: 12px; padding: 1.2rem;">
-        <h4 style="font-size: 0.98rem; font-weight:700; text-align: center; margin-bottom: 0.8rem; color: #334155;">
-          <i class="fa-solid fa-chart-pie" style="color: var(--primary-light);"></i> 본부별 인력 구성 분포도 (현원 136명 기준)
-        </h4>
-        <div class="chart-box" style="height: 250px;">
+      <!-- 도넛 차트 -->
+      <div class="chart-wrap" style="max-width: 680px; margin: 1.5rem auto 0;">
+        <h4><i class="fa-solid fa-chart-pie" style="color: var(--primary-light);" aria-hidden="true"></i> 본부별 인력 구성 분포 (현원 136명 기준)</h4>
+        <div class="chart-box" style="height: 260px;">
           <canvas id="orgChart"></canvas>
         </div>
       </div>
@@ -896,31 +1097,31 @@
     <!-- 3. 예산 및 재정 현황 -->
     <section id="budget" class="section-card">
       <div class="section-header">
-        <div class="section-title">
-          <i class="fa-solid fa-chart-pie" style="color: var(--primary-light);"></i>
+        <h2 class="section-title">
+          <i class="fa-solid fa-chart-pie" style="color: var(--primary-light);" aria-hidden="true"></i>
           Ⅲ. 예산 및 재무 구조 분석
-        </div>
+        </h2>
         <div class="section-actions">
-          <a href="https://www.kcti.re.kr/introduce/management.do" target="_blank" class="platform-link" style="font-size:0.85rem;">
-            경영공시 바로가기 <i class="fa-solid fa-angle-right"></i>
+          <a href="https://www.kcti.re.kr/introduce/management.do" target="_blank" rel="noopener" class="btn-top-small">
+            경영공시 <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
           </a>
-          <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up"></i> Top</a>
+          <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> Top</a>
         </div>
       </div>
 
-      <h3 class="sub-title"><i class="fa-solid fa-arrow-trend-up"></i> 연도별 예산 추이 (2021 ~ 2026, 단위: 백만 원)</h3>
-      <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
+      <h3 class="sub-title"><i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i> 연도별 예산 추이 (2021~2026, 단위: 백만 원)</h3>
+      <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> 좌우로 스크롤 가능</div>
       <div class="table-responsive">
         <table class="custom-table">
           <thead>
             <tr>
               <th>구분</th>
-              <th class="text-right">2021년</th>
-              <th class="text-right">2022년</th>
-              <th class="text-right">2023년</th>
-              <th class="text-right">2024년</th>
-              <th class="text-right">2025년</th>
-              <th class="text-right highlight-row">2026년</th>
+              <th class="text-right">2021</th>
+              <th class="text-right">2022</th>
+              <th class="text-right">2023</th>
+              <th class="text-right">2024</th>
+              <th class="text-right">2025</th>
+              <th class="text-right">2026</th>
             </tr>
           </thead>
           <tbody>
@@ -934,7 +1135,7 @@
               <td class="text-right text-success">29,596</td>
             </tr>
             <tr>
-              <td>├ 정부출연금 (일반회계)</td>
+              <td>├ 정부출연금(일반회계)</td>
               <td class="text-right">12,311</td>
               <td class="text-right">12,519</td>
               <td class="text-right">12,195</td>
@@ -943,7 +1144,7 @@
               <td class="text-right">12,522</td>
             </tr>
             <tr>
-              <td>└ 자체 수입 (수탁 및 기금)</td>
+              <td>└ 자체 수입(수탁·기금)</td>
               <td class="text-right">15,741</td>
               <td class="text-right">16,645</td>
               <td class="text-right">16,717</td>
@@ -956,37 +1157,28 @@
       </div>
 
       <div class="grid-2" style="margin-top: 1.5rem;">
-        <div>
-          <h4 style="font-size: 1rem; font-weight:700; margin-bottom: 0.6rem; color: #334155;">
-            <i class="fa-solid fa-chart-pie"></i> 2026년 수입 예산 구성 (29,596백만 원)
-          </h4>
-          <div class="chart-box">
-            <canvas id="revChart"></canvas>
-          </div>
+        <div class="chart-wrap">
+          <h4><i class="fa-solid fa-chart-pie" aria-hidden="true"></i> 2026년 수입 예산 구성 (29,596백만 원)</h4>
+          <div class="chart-box"><canvas id="revChart"></canvas></div>
         </div>
-        <div>
-          <h4 style="font-size: 1rem; font-weight:700; margin-bottom: 0.6rem; color: #334155;">
-            <i class="fa-solid fa-chart-column"></i> 2026년 주요 지출 항목별 규모 (백만 원)
-          </h4>
-          <div class="chart-box">
-            <canvas id="expChart"></canvas>
-          </div>
+        <div class="chart-wrap">
+          <h4><i class="fa-solid fa-chart-column" aria-hidden="true"></i> 2026년 주요 지출 항목 (백만 원)</h4>
+          <div class="chart-box"><canvas id="expChart"></canvas></div>
         </div>
       </div>
 
-      <!-- 2025 vs 2026 지출예산 상세 비교 표 (계층 및 구분 수정) -->
-      <h3 class="sub-title" style="margin-top: 2rem;"><i class="fa-solid fa-table-list"></i> 2025 vs 2026 지출예산 상세 비교 (단위: 백만 원, %)</h3>
-      <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
+      <h3 class="sub-title" style="margin-top: 2rem;"><i class="fa-solid fa-table-list" aria-hidden="true"></i> 2025 vs 2026 지출예산 상세 비교 (단위: 백만 원, %)</h3>
+      <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> 좌우로 스크롤 가능</div>
       <div class="table-responsive">
         <table class="custom-table">
           <thead>
             <tr>
-              <th style="min-width: 240px;">지출 항목 구분</th>
-              <th class="text-right" style="min-width: 100px;">2025년 예산</th>
-              <th class="text-right" style="min-width: 100px;">2026년 예산</th>
-              <th class="text-right" style="min-width: 90px;">증감액</th>
-              <th class="text-center" style="min-width: 80px;">증감률</th>
-              <th style="min-width: 260px;">세부 내역 및 사업 내용</th>
+              <th style="min-width: 200px;">지출 항목</th>
+              <th class="text-right" style="min-width: 85px;">2025</th>
+              <th class="text-right" style="min-width: 85px;">2026</th>
+              <th class="text-right" style="min-width: 75px;">증감액</th>
+              <th class="text-center" style="min-width: 75px;">증감률</th>
+              <th style="min-width: 220px;">세부 내역</th>
             </tr>
           </thead>
           <tbody>
@@ -998,10 +1190,8 @@
               <td class="text-center text-success"><strong>+1.7%</strong></td>
               <td><strong>총 지출 규모 소폭 확대</strong></td>
             </tr>
-
-            <!-- 1. 연구사업비 계층 -->
-            <tr style="background-color: #f1f5f9; font-weight: 700;">
-              <td>1. 연구사업비 (일반)</td>
+            <tr class="group-row">
+              <td>1. 연구사업비(일반)</td>
               <td class="text-right">3,337</td>
               <td class="text-right">3,003</td>
               <td class="text-right text-danger">△334</td>
@@ -1014,7 +1204,7 @@
               <td class="text-right">993</td>
               <td class="text-right text-danger">△195</td>
               <td class="text-center text-danger">△16.4%</td>
-              <td>기본연구 779백만, 정책연구사업 214백만</td>
+              <td>기본연구 779, 정책연구 214</td>
             </tr>
             <tr>
               <td class="indent-2">1) 기본연구사업</td>
@@ -1022,7 +1212,7 @@
               <td class="text-right">779</td>
               <td class="text-right text-danger">△183</td>
               <td class="text-center text-danger">△19.0%</td>
-              <td>기초·정책 과제 직접연구비 (30건x24.3백만)</td>
+              <td>기초·정책 과제 직접연구비(30건×24.3백만)</td>
             </tr>
             <tr>
               <td class="indent-2">2) 정책연구사업</td>
@@ -1048,9 +1238,7 @@
               <td class="text-center text-danger">△4.8%</td>
               <td>연구운영지원 356, 연구정보서비스 1,118</td>
             </tr>
-
-            <!-- 2. 수탁용역사업비 계층 -->
-            <tr style="background-color: #f1f5f9; font-weight: 700;">
+            <tr class="group-row">
               <td>2. 수탁 및 보조 사업비</td>
               <td class="text-right">11,734</td>
               <td class="text-right">12,118</td>
@@ -1059,33 +1247,31 @@
               <td>수탁연구 및 개별출연(보조) 합계</td>
             </tr>
             <tr>
-              <td class="indent-1">가. 수탁연구사업비 (자체)</td>
+              <td class="indent-1">가. 수탁연구사업비(자체)</td>
               <td class="text-right">6,113</td>
               <td class="text-right">4,847</td>
               <td class="text-right text-danger">△1,266</td>
               <td class="text-center text-danger">△20.7%</td>
-              <td>직접경비 4,577백만, 간접경비 270백만</td>
+              <td>직접경비 4,577, 간접경비 270</td>
             </tr>
             <tr>
-              <td class="indent-1">나. 개별출연사업비 (기금)</td>
+              <td class="indent-1">나. 개별출연사업비(기금)</td>
               <td class="text-right">5,621</td>
               <td class="text-right">7,271</td>
               <td class="text-right text-success">+1,650</td>
               <td class="text-center text-success">+29.4%</td>
               <td>관광통계개선(32.15억), 문화영향평가 등</td>
             </tr>
-
-            <!-- 3. 인건비 계층 -->
-            <tr style="background-color: #f1f5f9; font-weight: 700;">
+            <tr class="group-row">
               <td>3. 인건비</td>
               <td class="text-right">10,883</td>
               <td class="text-right">11,265</td>
               <td class="text-right text-success">+382</td>
               <td class="text-center text-success">+3.5%</td>
-              <td>일반회계 8,445백만, 자체수입 2,820백만</td>
+              <td>일반회계 8,445, 자체수입 2,820</td>
             </tr>
             <tr>
-              <td class="indent-1">1) 보수 (정규직)</td>
+              <td class="indent-1">1) 보수(정규직)</td>
               <td class="text-right">9,757</td>
               <td class="text-right">10,077</td>
               <td class="text-right text-success">+320</td>
@@ -1093,7 +1279,7 @@
               <td>연구·통계·행정직 기본급 및 수당</td>
             </tr>
             <tr>
-              <td class="indent-1">2) 상용임금 (운영직)</td>
+              <td class="indent-1">2) 상용임금(운영직)</td>
               <td class="text-right">1,041</td>
               <td class="text-right">1,098</td>
               <td class="text-right text-success">+57</td>
@@ -1108,17 +1294,15 @@
               <td class="text-center text-success">+5.9%</td>
               <td>기타 계약인력 보수</td>
             </tr>
-
-            <!-- 4. 경상비, 예비비, 적립금 -->
-            <tr style="background-color: #f1f5f9; font-weight: 700;">
+            <tr class="group-row">
               <td>4. 경상비</td>
               <td class="text-right">1,911</td>
               <td class="text-right">1,914</td>
               <td class="text-right">+3</td>
               <td class="text-center">+0.2%</td>
-              <td>일반 1,074백만(임차료 2.19억 등), 자체 840백만</td>
+              <td>일반 1,074(임차료 2.19억 등), 자체 840</td>
             </tr>
-            <tr style="background-color: #f1f5f9; font-weight: 700;">
+            <tr class="group-row">
               <td>5. 예비비</td>
               <td class="text-right">800</td>
               <td class="text-right">800</td>
@@ -1126,13 +1310,13 @@
               <td class="text-center">0.0%</td>
               <td>예비비 편성 유지</td>
             </tr>
-            <tr style="background-color: #f1f5f9; font-weight: 700;">
+            <tr class="group-row">
               <td>6. 연구개발적립금</td>
               <td class="text-right">433</td>
               <td class="text-right">496</td>
               <td class="text-right text-success">+63</td>
               <td class="text-center text-success">+14.5%</td>
-              <td>R&D 적립금 전입 확대</td>
+              <td>R&amp;D 적립금 전입 확대</td>
             </tr>
           </tbody>
         </table>
@@ -1142,34 +1326,34 @@
     <!-- 4. 주요 사업 포트폴리오 -->
     <section id="research" class="section-card">
       <div class="section-header">
-        <div class="section-title">
-          <i class="fa-solid fa-list-check" style="color: var(--primary-light);"></i>
+        <h2 class="section-title">
+          <i class="fa-solid fa-list-check" style="color: var(--primary-light);" aria-hidden="true"></i>
           Ⅳ. 주요 사업 포트폴리오
-        </div>
+        </h2>
         <div class="section-actions">
-          <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up"></i> Top</a>
+          <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> Top</a>
         </div>
       </div>
 
-      <h3 class="sub-title"><i class="fa-solid fa-microscope"></i> 기본연구사업 유형별 단가 및 수행 현황</h3>
+      <h3 class="sub-title"><i class="fa-solid fa-microscope" aria-hidden="true"></i> 기본연구사업 유형별 단가 추이</h3>
       <div class="callout-box warning">
         <strong>과제당 연구비 축소 추세:</strong><br>
-        • <strong>기초연구:</strong> '23년 3,000만 ➔ '24~'25년 2,700만 ➔ <strong>'26년 2,400만 원</strong> (△20%)<br>
-        • <strong>정책연구:</strong> '23년 2,500만 ➔ '24~'25년 2,250만 ➔ <strong>'26년 2,000만 원</strong> (△20%)<br>
-        • <strong>수시연구:</strong> '23년 1,250만 ➔ '24~'25년 1,200만 ➔ <strong>'26년 1,000만 원</strong> (△20%)
+        • <strong>기초연구:</strong> '23년 3,000만 → '24~'25년 2,700만 → <strong>'26년 2,400만 원</strong> (△20%)<br>
+        • <strong>정책연구:</strong> '23년 2,500만 → '24~'25년 2,250만 → <strong>'26년 2,000만 원</strong> (△20%)<br>
+        • <strong>수시연구:</strong> '23년 1,250만 → '24~'25년 1,200만 → <strong>'26년 1,000만 원</strong> (△20%)
       </div>
 
-      <h3 class="sub-title"><i class="fa-solid fa-handshake-angle"></i> 특정목적출연금사업 현황 (2025 vs 2026, 단위: 백만 원)</h3>
-      <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
+      <h3 class="sub-title"><i class="fa-solid fa-handshake-angle" aria-hidden="true"></i> 특정목적출연금사업 현황 (2025 vs 2026, 단위: 백만 원)</h3>
+      <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> 좌우로 스크롤 가능</div>
       <div class="table-responsive">
         <table class="custom-table">
           <thead>
             <tr>
-              <th>사업명</th>
-              <th class="text-right">2025년</th>
-              <th class="text-right">2026년</th>
-              <th>소관 본부/부서</th>
-              <th>사업 내용 및 성격</th>
+              <th style="min-width: 200px;">사업명</th>
+              <th class="text-right" style="min-width: 75px;">2025</th>
+              <th class="text-right" style="min-width: 75px;">2026</th>
+              <th style="min-width: 140px;">소관 부서</th>
+              <th style="min-width: 220px;">사업 내용</th>
             </tr>
           </thead>
           <tbody>
@@ -1185,7 +1369,7 @@
               <td class="text-right">586</td>
               <td class="text-right">586</td>
               <td>데이터정책본부</td>
-              <td>방한 외래객 소비행태 및 실태 정밀조사 (승인통계)</td>
+              <td>방한 외래객 소비행태 및 실태 정밀조사(승인통계)</td>
             </tr>
             <tr>
               <td>③ 걷기여행 환경영향지표 개발조사</td>
@@ -1206,10 +1390,10 @@
               <td class="text-right">520</td>
               <td class="text-right">547</td>
               <td>지역관광개발관리센터</td>
-              <td>문체부 관광자원개발사업 관리 및 모니터링 시스템</td>
+              <td>문체부 관광자원개발사업 관리·모니터링</td>
             </tr>
             <tr>
-              <td>⑥ 광역관광개발 성과관리 및 컨설팅</td>
+              <td>⑥ 광역관광개발 성과관리·컨설팅</td>
               <td class="text-right">720</td>
               <td class="text-right">992</td>
               <td>지역관광개발관리센터</td>
@@ -1223,14 +1407,14 @@
               <td>지역별 숙박 수요-공급 정밀 예측 분석</td>
             </tr>
             <tr>
-              <td>⑧ 국제관광기구 의제 대응 및 발굴 연구</td>
+              <td>⑧ 국제관광기구 의제 대응 및 발굴</td>
               <td class="text-right">100</td>
               <td class="text-right">100</td>
               <td>관광정책연구실</td>
-              <td>UN Tourism, OECD 등 글로벌 다자협력 의제 대응</td>
+              <td>UN Tourism, OECD 등 다자협력 의제 대응</td>
             </tr>
             <tr>
-              <td>⑨ 문화영향평가 (특목 전환)</td>
+              <td>⑨ 문화영향평가(특목 전환)</td>
               <td class="text-right">수탁</td>
               <td class="text-right">1,450</td>
               <td>문화연구본부</td>
@@ -1251,53 +1435,53 @@
     <!-- 5. 주요 현안 및 추진 과제 -->
     <section id="issues" class="section-card">
       <div class="section-header">
-        <div class="section-title">
-          <i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);"></i>
+        <h2 class="section-title">
+          <i class="fa-solid fa-triangle-exclamation" style="color: var(--danger);" aria-hidden="true"></i>
           Ⅴ. 기관 3대 핵심 현안 및 상세 분석
-        </div>
+        </h2>
         <div class="section-actions">
-          <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up"></i> Top</a>
+          <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> Top</a>
         </div>
       </div>
 
       <div class="issue-grid">
         <!-- 현안 1 -->
-        <div class="issue-card danger">
+        <article class="issue-card danger">
           <div>
             <span class="issue-badge" style="background:#fee2e2; color:#b91c1c;">핵심현안 01</span>
             <h4>인력 및 예산 규모 개편 (출연금 비중 확대)</h4>
             <div class="issue-content">
-              <strong>1) 연구·평가사업 규모 확대 대비 인력 정체:</strong>
+              <strong>1) 연구·평가사업 규모 확대 대비 인력 정체</strong>
               <ul>
                 <li>정책연구(현안) 수요 급증, 속보성 통계 생산, 평가 강화로 사업비는 확대되나 인력 증원 정체</li>
-                <li>「문화예술진흥법」 전부 개정에 따른 ‘문예진흥기금 성과평가’ 위탁인력 충원 시급</li>
+                <li>「문화예술진흥법」 전부 개정에 따른 '문예진흥기금 성과평가' 위탁인력 충원 시급</li>
               </ul>
-              <strong style="display:block; margin-top:0.8rem;">2) 타 경제인문사회 연구기관 대비 턱없이 낮은 출연금 지원율:</strong>
+              <strong style="display:block; margin-top:0.8rem;">2) 타 경제인문사회 연구기관 대비 낮은 출연금 지원율</strong>
               <ul>
-                <li><strong>연구원 지원율:</strong> 인건비 <strong>70.0%</strong>, 경상비 <strong>56.1%</strong> 불과 ('10년 81.8%/75.0%에서 지속 하락)</li>
+                <li><strong>연구원 지원율:</strong> 인건비 <strong>70.0%</strong>, 경상비 <strong>56.1%</strong> ('10년 81.8%/75.0%에서 지속 하락)</li>
                 <li><strong>10개 경인사 연구기관 평균:</strong> 인건비 <strong>96.6%</strong>, 경상비 <strong>94.4%</strong> (PBS 폐지)</li>
-                <li>자체예산 충당을 위한 수탁용역 과중으로 고유의 정책연구·지원 기능 약화 지속</li>
+                <li>자체예산 충당을 위한 수탁용역 과중으로 고유 정책연구·지원 기능 약화 지속</li>
               </ul>
             </div>
           </div>
           <div class="issue-solution">
             <strong>추진 전략:</strong> 정출연 수준의 인건비·경상비 출연금 지원율(90% 이상) 단계적 현실화 및 법정 위탁평가 전담인력 확보 추진
           </div>
-        </div>
+        </article>
 
         <!-- 현안 2 -->
-        <div class="issue-card warning">
+        <article class="issue-card warning">
           <div>
             <span class="issue-badge" style="background:#fef3c7; color:#92400e;">핵심현안 02</span>
             <h4>공공기관 2차 지방이전에 따른 종합 대책</h4>
             <div class="issue-content">
-              <strong>1) 지방이전 가시화 및 전수조사 완료:</strong>
+              <strong>1) 지방이전 가시화 및 전수조사 완료</strong>
               <ul>
-                <li>국토부 2차 공공기관 이전 실행지원 용역(3.8억) 완료 및 전수조사 제출 ('25.11.20.)</li>
+                <li>국토부 2차 공공기관 이전 실행지원 용역(3.8억) 완료 및 전수조사 제출('25.11.20.)</li>
               </ul>
-              <strong style="display:block; margin-top:0.8rem;">2) 직면한 문제점 및 위험 요인:</strong>
+              <strong style="display:block; margin-top:0.8rem;">2) 직면한 문제점 및 위험 요인</strong>
               <ul>
-                <li>신규 청사 마련(임차비) 및 대규모 이전비용 발생에 따른 막대한 재무 부담</li>
+                <li>신규 청사 마련(임차비) 및 대규모 이전비용 발생에 따른 재무 부담</li>
                 <li>생활 기반 변화로 인한 핵심 연구·사업 인력 이탈 심화 및 업무 공백 우려</li>
               </ul>
             </div>
@@ -1305,16 +1489,16 @@
           <div class="issue-solution">
             <strong>추진 전략:</strong> 직원 처우 개선(사업·사무 운영직 직군 통합) 및 주거지원, 복무 유연화 등 실효적 정주 인센티브 마련
           </div>
-        </div>
+        </article>
 
         <!-- 현안 3 -->
-        <div class="issue-card" style="grid-column: 1 / -1; border-top-color: var(--primary);">
+        <article class="issue-card" style="grid-column: 1 / -1; border-top-color: var(--primary);">
           <div>
             <span class="issue-badge" style="background:#e0e7ff; color:#3730a3;">핵심현안 03</span>
             <h4>정보화 및 데이터 전담 인력 증원</h4>
             <div class="issue-content">
               <ul>
-                <li><strong>대통령 지시사항 이행 필요:</strong> '개인정보, 데이터 관리 전담 인력 확보' ('26.5.12. 지시사항)에 따른 전문인력 충원 필수</li>
+                <li><strong>대통령 지시사항 이행 필요:</strong> '개인정보, 데이터 관리 전담 인력 확보'('26.5.12. 지시사항)에 따른 전문인력 충원 필수</li>
                 <li><strong>정보사업팀 신설('26.7.3.) 운영 한계:</strong> 별도 전담 정원을 확보하지 못해 기존 인력 일부 재배치로 운영 중</li>
                 <li><strong>전문인력 충원 전무:</strong> 기관 특성상 연구·통계직 재배치가 불가능하며, <strong>2020년 이후 6년간 정보화 전문인력 충원 전무</strong></li>
               </ul>
@@ -1323,30 +1507,30 @@
           <div class="issue-solution">
             <strong>추진 전략:</strong> 문체부 및 관계부처와 협의하여 정보보안·데이터 관리 전담 정원(TO) 순증 확보 추진
           </div>
-        </div>
+        </article>
       </div>
 
       <!-- 타 기관과의 출연금 지원율 비교표 -->
-      <h3 class="sub-title" style="margin-top:2.2rem;">
-        <i class="fa-solid fa-scale-unbalanced-flip"></i> [근거자료] 경제인문사회계열 주요 연구기관 vs KCTI 지원율 비교 (2026년 기준)
+      <h3 class="sub-title" style="margin-top:2rem;">
+        <i class="fa-solid fa-scale-unbalanced-flip" aria-hidden="true"></i> [근거자료] 경제인문사회계열 주요 연구기관 vs KCTI 지원율 비교 (2026)
       </h3>
-      <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
+      <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> 좌우로 스크롤 가능</div>
       <div class="table-responsive">
         <table class="custom-table">
           <thead>
             <tr>
-              <th>기관명</th>
-              <th class="text-center">정원(명)</th>
-              <th class="text-right">'26 인건비(백만)</th>
-              <th class="text-center">'25 인건비지원율</th>
-              <th class="text-center highlight-row">'26 인건비지원율</th>
-              <th class="text-right">'26 경상비(백만)</th>
-              <th class="text-center">'25 경상비지원율</th>
-              <th class="text-center highlight-row">'26 경상비지원율</th>
+              <th style="min-width: 150px;">기관명</th>
+              <th class="text-center" style="min-width: 70px;">정원(명)</th>
+              <th class="text-right" style="min-width: 100px;">'26 인건비(백만)</th>
+              <th class="text-center" style="min-width: 90px;">'25 인건비지원율</th>
+              <th class="text-center" style="min-width: 90px;">'26 인건비지원율</th>
+              <th class="text-right" style="min-width: 100px;">'26 경상비(백만)</th>
+              <th class="text-center" style="min-width: 90px;">'25 경상비지원율</th>
+              <th class="text-center" style="min-width: 90px;">'26 경상비지원율</th>
             </tr>
           </thead>
           <tbody>
-            <tr class="highlight-row" style="background:#fee2e2;">
+            <tr style="background:#fee2e2; font-weight:700;">
               <td><strong>한국문화관광연구원</strong></td>
               <td class="text-center"><strong>139</strong></td>
               <td class="text-right"><strong>12,065</strong></td>
@@ -1356,7 +1540,7 @@
               <td class="text-center">71.8%</td>
               <td class="text-center text-danger">56.1%</td>
             </tr>
-            <tr class="highlight-row" style="background:#f1f5f9;">
+            <tr class="group-row">
               <td><strong>10개 연구기관 평균</strong></td>
               <td class="text-center"><strong>194</strong></td>
               <td class="text-right"><strong>18,177</strong></td>
@@ -1421,29 +1605,28 @@
       </div>
     </section>
 
-    <!-- 6. 붙임 자료 (완벽하게 재설계된 [붙임 1~4] 통합 수록) -->
+    <!-- 6. 붙임 자료 -->
     <section id="appendix" class="section-card">
       <div class="section-header">
-        <div class="section-title">
-          <i class="fa-solid fa-paperclip" style="color: var(--primary-light);"></i>
+        <h2 class="section-title">
+          <i class="fa-solid fa-paperclip" style="color: var(--primary-light);" aria-hidden="true"></i>
           Ⅵ. 붙임 상세 자료 (과제 / 통계 / 평가)
-        </div>
+        </h2>
         <div class="section-actions">
-          <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up"></i> Top</a>
+          <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> Top</a>
         </div>
       </div>
 
-      <!-- [붙임 1] 2026년 기본연구과제 39건 전체 목록 (필터 기능) -->
-      <h3 class="sub-title"><i class="fa-solid fa-book-bookmark"></i> [붙임 1] 2026년 기본연구과제 전체 현황 (총 39건)</h3>
-      <div class="filter-btn-group">
-        <button class="filter-btn active" onclick="filterResearch('all', this)">전체보기 (39건)</button>
-        <button class="filter-btn" onclick="filterResearch('기초', this)">기초연구 (6건)</button>
-        <button class="filter-btn" onclick="filterResearch('정책', this)">정책연구 (24건)</button>
-        <button class="filter-btn" onclick="filterResearch('수시', this)">수시연구 (9건)</button>
-        <button class="filter-btn" onclick="filterResearch('문화', this)">문화분야</button>
-        <button class="filter-btn" onclick="filterResearch('관광', this)">관광분야</button>
-        <button class="filter-btn" onclick="filterResearch('콘텐츠', this)">콘텐츠분야</button>
-        <button class="filter-btn" onclick="filterResearch('데이터', this)">데이터분야</button>
+      <h3 class="sub-title"><i class="fa-solid fa-book-bookmark" aria-hidden="true"></i> [붙임 1] 2026년 기본연구과제 전체 현황 (총 39건)</h3>
+      <div class="filter-btn-group" role="group" aria-label="연구과제 필터">
+        <button class="filter-btn active" data-filter="all">전체보기 (39건)</button>
+        <button class="filter-btn" data-filter="기초">기초연구 (6건)</button>
+        <button class="filter-btn" data-filter="정책">정책연구 (24건)</button>
+        <button class="filter-btn" data-filter="수시">수시연구 (9건)</button>
+        <button class="filter-btn" data-filter="문화">문화분야</button>
+        <button class="filter-btn" data-filter="관광">관광분야</button>
+        <button class="filter-btn" data-filter="콘텐츠">콘텐츠분야</button>
+        <button class="filter-btn" data-filter="데이터">데이터분야</button>
       </div>
 
       <ul class="research-list" id="researchFullList">
@@ -1492,7 +1675,7 @@
         </li>
         <li class="research-item" data-type="정책" data-field="문화">
           <span class="research-tag tag-culture">정책·문화</span>
-          <span><strong>11.</strong> 박물관·미술관 정책구조의 재편방안 연구: 중앙-지방 정책기능 재분배를 중심으로</span>
+          <span><strong>11.</strong> 박물관·미술관 정책구조의 재편방안 연구: 중앙-지방 정책기능 재분배</span>
         </li>
         <li class="research-item" data-type="정책" data-field="문화">
           <span class="research-tag tag-culture">정책·문화</span>
@@ -1578,7 +1761,7 @@
         </li>
         <li class="research-item" data-type="수시" data-field="문화">
           <span class="research-tag tag-culture">수시·문화</span>
-          <span><strong>32.</strong> 예술인 복지정책 대상 기준 설정 연구: 해외사례 분석을 중심으로</span>
+          <span><strong>32.</strong> 예술인 복지정책 대상 기준 설정 연구: 해외사례 분석 중심</span>
         </li>
         <li class="research-item" data-type="수시" data-field="문화">
           <span class="research-tag tag-culture">수시·문화</span>
@@ -1610,31 +1793,30 @@
         </li>
       </ul>
 
-      <!-- [붙임 2 & 3] 통계 및 평가 상세 표 (대칭 2단 그리드로 깔끔하게 재배치) -->
+      <!-- [붙임 2 & 3] 통계 및 평가 상세 표 -->
       <div class="grid-2" style="margin-top: 2rem;">
-        <!-- [붙임 2] 국가승인통계 9종 상세 -->
         <div>
-          <h3 class="sub-title" style="margin-top:0;"><i class="fa-solid fa-chart-column" style="color: var(--primary-light);"></i> [붙임 2] 국가승인통계 9종 상세</h3>
-          <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
+          <h3 class="sub-title" style="margin-top:0;"><i class="fa-solid fa-chart-column" aria-hidden="true"></i> [붙임 2] 국가승인통계 9종</h3>
+          <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> 좌우로 스크롤 가능</div>
           <div class="table-responsive">
             <table class="custom-table">
               <thead>
                 <tr>
                   <th class="text-center" style="width: 22%;">분야</th>
-                  <th style="width: 38%;">통계명</th>
-                  <th style="width: 40%;">근거 법령 상세</th>
+                  <th style="width: 42%;">통계명</th>
+                  <th style="width: 36%;">근거 법령</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td class="text-center"><strong>종합</strong></td>
                   <td>문화체육관광 일자리현황조사</td>
-                  <td>「통계법」 제18조(통계작성의 승인)</td>
+                  <td>「통계법」 제18조</td>
                 </tr>
                 <tr>
                   <td rowspan="3" class="text-center"><strong>문화</strong></td>
                   <td>국민문화예술활동조사</td>
-                  <td>「문화기본법」 제11조(조사·연구)</td>
+                  <td>「문화기본법」 제11조</td>
                 </tr>
                 <tr>
                   <td>국민여가활동조사</td>
@@ -1647,160 +1829,114 @@
                 <tr>
                   <td rowspan="4" class="text-center"><strong>관광</strong></td>
                   <td>국민여행조사</td>
-                  <td>「관광진흥법」 제47조의2(관광통계)</td>
+                  <td>「관광진흥법」 제47조의2</td>
                 </tr>
                 <tr>
                   <td>관광산업조사</td>
-                  <td>「관광진흥법」 제47조의2(관광통계)</td>
+                  <td>「관광진흥법」 제47조의2</td>
                 </tr>
                 <tr>
                   <td>외래관광객조사</td>
-                  <td>「관광진흥법」 제47조의2(관광통계)</td>
+                  <td>「관광진흥법」 제47조의2</td>
                 </tr>
                 <tr>
                   <td>주요관광지점 입장객통계</td>
-                  <td>「관광진흥법」 제47조의2(관광통계)</td>
+                  <td>「관광진흥법」 제47조의2</td>
                 </tr>
                 <tr>
                   <td class="text-center"><strong>원 승인</strong></td>
                   <td>문화체육관광산업통계</td>
-                  <td>「통계법」 제18조(통계작성의 승인)</td>
+                  <td>「통계법」 제18조</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
 
-        <!-- [붙임 3] 정책사업 평가 전담 근거 -->
         <div>
-          <h3 class="sub-title" style="margin-top:0;"><i class="fa-solid fa-stamp" style="color: var(--primary-light);"></i> [붙임 3] 정책사업 평가 전담 근거</h3>
-          <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
+          <h3 class="sub-title" style="margin-top:0;"><i class="fa-solid fa-stamp" aria-hidden="true"></i> [붙임 3] 정책사업 평가 전담 근거</h3>
+          <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> 좌우로 스크롤 가능</div>
           <div class="table-responsive">
             <table class="custom-table">
               <thead>
                 <tr>
                   <th class="text-center" style="width: 22%;">분야</th>
-                  <th style="width: 35%;">평가명</th>
-                  <th style="width: 43%;">근거 법령 및 지정 현황</th>
+                  <th style="width: 38%;">평가명</th>
+                  <th style="width: 40%;">근거 법령 및 지정</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td class="text-center"><strong>문화</strong></td>
                   <td><strong>문화영향평가</strong></td>
-                  <td>
-                    • 「문화기본법」 제9조의4 및 시행령 제6조의4<br>
-                    • 전담기관 지정기간: 2026.3.26 ~ 2029.3.25
-                  </td>
+                  <td>「문화기본법」 제9조의4<br>지정기간: '26.3.26~'29.3.25</td>
                 </tr>
                 <tr>
                   <td class="text-center"><strong>관광</strong></td>
                   <td><strong>관광특구평가</strong></td>
-                  <td>
-                    • 「관광진흥법」 시행령 제58조의2<br>
-                    • 법상 조사·분석 전문기관(한국문화관광연구원) 명시
-                  </td>
+                  <td>「관광진흥법」 시행령 제58조의2<br>법상 조사·분석 전문기관 명시</td>
                 </tr>
                 <tr>
                   <td class="text-center"><strong>관광</strong></td>
                   <td><strong>지역관광개발사업평가</strong></td>
-                  <td>
-                    • 「관광진흥법」 제76조의3 신설('26.3.31 가결)<br>
-                    • 시행령 내 전담기관 지정 협의 중(하반기)
-                  </td>
+                  <td>「관광진흥법」 제76조의3 신설('26.3)<br>시행령 전담기관 지정 협의 중</td>
                 </tr>
               </tbody>
             </table>
           </div>
-        </div>
-      </div>
 
-      <!-- [붙임 4] 기본연구과제 유형별 현황 (단독 Full-Width 전체 표로 깔끔하게 수록) -->
-      <div style="margin-top: 2rem;">
-        <h3 class="sub-title" style="margin-top:0;"><i class="fa-solid fa-layer-group" style="color: var(--primary-light);"></i> [붙임 4] 기본연구과제 유형별 현황 및 단가 (원문 전체)</h3>
-        <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> 좌우로 스크롤하여 확인 가능합니다</div>
-        <div class="table-responsive">
-          <table class="custom-table">
-            <thead>
-              <tr>
-                <th class="text-center" style="width: 14%;">대구분</th>
-                <th style="width: 16%;">연구 유형</th>
-                <th class="text-center" style="width: 12%;">수행 기간</th>
-                <th class="text-right" style="width: 14%;">2026년 단가</th>
-                <th class="text-center" style="width: 11%;">'25년 실적</th>
-                <th class="text-center" style="width: 11%;">'26년 진행</th>
-                <th class="text-center" style="width: 10%;">'26년 잔여</th>
-                <th style="width: 12%;">재원 및 비고</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td rowspan="3" class="text-center highlight-row"><strong>기본연구</strong></td>
-                <td><strong>기초연구</strong></td>
-                <td class="text-center">10개월</td>
-                <td class="text-right"><strong>2,400만 원</strong></td>
-                <td class="text-center">6건</td>
-                <td class="text-center text-success">6건</td>
-                <td class="text-center">0건</td>
-                <td>연구예산 (정부출연금)</td>
-              </tr>
-              <tr>
-                <td><strong>정책연구</strong></td>
-                <td class="text-center">8개월</td>
-                <td class="text-right"><strong>2,000만 원</strong></td>
-                <td class="text-center">24건</td>
-                <td class="text-center text-success">24건</td>
-                <td class="text-center">0건</td>
-                <td>연구예산 (정부출연금)</td>
-              </tr>
-              <tr>
-                <td><strong>수시연구</strong></td>
-                <td class="text-center">5개월</td>
-                <td class="text-right"><strong>1,000만 원</strong></td>
-                <td class="text-center">9건</td>
-                <td class="text-center text-success">7건</td>
-                <td class="text-center">0건</td>
-                <td>연구개발적립금 ('26~)</td>
-              </tr>
-              <tr>
-                <td rowspan="4" class="text-center" style="background-color: #f8fafc;"><strong>기타연구</strong></td>
-                <td><strong>현안연구</strong></td>
-                <td class="text-center">3개월</td>
-                <td class="text-right"><strong>800만 원</strong></td>
-                <td class="text-center">8건</td>
-                <td class="text-center text-success">9건</td>
-                <td class="text-center text-danger">2건</td>
-                <td>연구개발적립금</td>
-              </tr>
-              <tr>
-                <td><strong>정책리포트</strong></td>
-                <td class="text-center">1개월</td>
-                <td class="text-right"><strong>150만 원</strong></td>
-                <td class="text-center">7건</td>
-                <td class="text-center text-success">6건</td>
-                <td class="text-center text-danger">1건</td>
-                <td>연구개발적립금</td>
-              </tr>
-              <tr>
-                <td><strong>협력연구</strong></td>
-                <td class="text-center">심의회 결정</td>
-                <td class="text-right">-</td>
-                <td class="text-center">1건</td>
-                <td class="text-center text-success">1건</td>
-                <td class="text-center">-</td>
-                <td>외부예산 (수탁)</td>
-              </tr>
-              <tr>
-                <td><strong>특별연구</strong></td>
-                <td class="text-center">5개월</td>
-                <td class="text-right"><strong>500만 원</strong></td>
-                <td class="text-center">1건</td>
-                <td class="text-center text-success">1건</td>
-                <td class="text-center">0건</td>
-                <td>연구개발적립금 (임피제)</td>
-              </tr>
-            </tbody>
-          </table>
+          <h3 class="sub-title" style="margin-top:1.5rem;"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> [붙임 4] 연구과제 유형 및 단가</h3>
+          <div class="table-scroll-hint"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> 좌우로 스크롤 가능</div>
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>유형</th>
+                  <th class="text-center">기간</th>
+                  <th class="text-right">'26 단가</th>
+                  <th class="text-center">'26 건수</th>
+                  <th>재원 구분</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>기초연구</strong></td>
+                  <td class="text-center">10개월</td>
+                  <td class="text-right">2,400만</td>
+                  <td class="text-center">6건</td>
+                  <td>출연금(일반)</td>
+                </tr>
+                <tr>
+                  <td><strong>정책연구</strong></td>
+                  <td class="text-center">8개월</td>
+                  <td class="text-right">2,000만</td>
+                  <td class="text-center">24건</td>
+                  <td>출연금(일반)</td>
+                </tr>
+                <tr>
+                  <td><strong>수시연구</strong></td>
+                  <td class="text-center">5개월</td>
+                  <td class="text-right">1,000만</td>
+                  <td class="text-center">9건</td>
+                  <td>R&amp;D적립금</td>
+                </tr>
+                <tr>
+                  <td><strong>현안연구</strong></td>
+                  <td class="text-center">3개월</td>
+                  <td class="text-right">800만</td>
+                  <td class="text-center">11건</td>
+                  <td>R&amp;D적립금</td>
+                </tr>
+                <tr>
+                  <td><strong>정책리포트</strong></td>
+                  <td class="text-center">1개월</td>
+                  <td class="text-right">150만</td>
+                  <td class="text-center">8건</td>
+                  <td>R&amp;D적립금</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
@@ -1808,107 +1944,139 @@
     <!-- 7. 대국민 데이터 서비스 및 플랫폼 링크 -->
     <section id="platforms" class="section-card">
       <div class="section-header">
-        <div class="section-title">
-          <i class="fa-solid fa-server" style="color: var(--primary-light);"></i>
+        <h2 class="section-title">
+          <i class="fa-solid fa-server" style="color: var(--primary-light);" aria-hidden="true"></i>
           Ⅶ. 대국민 정책정보 및 데이터 서비스 플랫폼
-        </div>
+        </h2>
         <div class="section-actions">
-          <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up"></i> Top</a>
+          <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> Top</a>
         </div>
       </div>
 
       <div class="platform-grid">
-        <div class="platform-card">
+        <article class="platform-card">
           <div>
-            <h4><i class="fa-solid fa-palette" style="color: #db2777;"></i> 문화예술지식정보시스템 (ACKIS)</h4>
+            <h4><i class="fa-solid fa-palette" style="color: #db2777;" aria-hidden="true"></i> 문화예술지식정보시스템 (ACKIS)</h4>
             <p>문화예술 분야 정책, 문화자원, 문화산업, 융합콘텐츠 관련 지식정보 및 통계 데이터를 종합 서비스합니다.</p>
           </div>
-          <a href="https://policydb.kcti.re.kr" target="_blank" class="platform-link">
-            policydb.kcti.re.kr 바로가기 <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          <a href="https://policydb.kcti.re.kr" target="_blank" rel="noopener" class="platform-link">
+            policydb.kcti.re.kr 바로가기 <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
           </a>
-        </div>
+        </article>
 
-        <div class="platform-card">
+        <article class="platform-card">
           <div>
-            <h4><i class="fa-solid fa-plane-departure" style="color: #2563eb;"></i> 관광지식정보시스템 (TourGo)</h4>
+            <h4><i class="fa-solid fa-plane-departure" style="color: #2563eb;" aria-hidden="true"></i> 관광지식정보시스템 (TourGo)</h4>
             <p>국가 관광 통계, 관광동향, 출입국 분석 데이터 및 국민 체감형 관광 콘텐츠를 제공하는 대표 포털입니다.</p>
           </div>
-          <a href="https://know.tour.go.kr" target="_blank" class="platform-link">
-            know.tour.go.kr 바로가기 <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          <a href="https://know.tour.go.kr" target="_blank" rel="noopener" class="platform-link">
+            know.tour.go.kr 바로가기 <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
           </a>
-        </div>
+        </article>
 
-        <div class="platform-card">
+        <article class="platform-card">
           <div>
-            <h4><i class="fa-solid fa-map-location-dot" style="color: #059669;"></i> 관광개발정보시스템 (TDSS)</h4>
+            <h4><i class="fa-solid fa-map-location-dot" style="color: #059669;" aria-hidden="true"></i> 관광개발정보시스템 (TDSS)</h4>
             <p>문체부 지원 관광자원개발사업을 대상으로 통합 정보 및 체계적인 성과관리 모니터링을 지원합니다.</p>
           </div>
-          <a href="https://www.tdss.kr" target="_blank" class="platform-link">
-            www.tdss.kr 바로가기 <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          <a href="https://www.tdss.kr" target="_blank" rel="noopener" class="platform-link">
+            www.tdss.kr 바로가기 <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
           </a>
-        </div>
+        </article>
       </div>
     </section>
 
   </main>
 
   <!-- 플로팅 최상단 이동 버튼 -->
-  <a href="#top" id="floatingTopBtn" class="floating-top-btn" title="페이지 최상단으로 이동">
-    <i class="fa-solid fa-arrow-up"></i>
+  <a href="#top" id="floatingTopBtn" class="floating-top-btn" title="페이지 최상단으로 이동" aria-label="페이지 최상단으로 이동">
+    <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
   </a>
 
   <!-- 푸터 -->
   <footer>
-    <div style="max-width: 1320px; margin: 0 auto;">
+    <div class="footer-inner">
       <p style="margin-bottom: 0.4rem; font-weight: 700; font-size: 0.95rem; color: #f1f5f9;">
-        한국문화관광연구원 (Korea Culture & Tourism Institute)
+        한국문화관광연구원 (Korea Culture &amp; Tourism Institute)
       </p>
       <p style="font-size: 0.82rem; margin-bottom: 0.9rem; color: #94a3b8;">
-        서울특별시 강서구 금낭화로 154 (방화동) | 대표전화: 02-2669-9800
+        서울특별시 강서구 금낭화로 154 (방화동) · 대표전화 02-2669-9800
       </p>
       <p style="font-size: 0.8rem;">
-        <a href="https://www.kcti.re.kr" target="_blank">KCTI 공식 웹사이트 (www.kcti.re.kr)</a> | 
-        <a href="https://www.kcti.re.kr/introduce/vision.do" target="_blank">연구원 경영비전</a> | 
-        <a href="https://www.kcti.re.kr/introduce/organization.do" target="_blank">조직안내</a>
+        <a href="https://www.kcti.re.kr" target="_blank" rel="noopener">KCTI 공식 웹사이트</a> ·
+        <a href="https://www.kcti.re.kr/introduce/vision.do" target="_blank" rel="noopener">경영비전</a> ·
+        <a href="https://www.kcti.re.kr/introduce/organization.do" target="_blank" rel="noopener">조직안내</a>
       </p>
     </div>
   </footer>
 
   <!-- Scripts -->
   <script>
-    // 1. 플로팅 Top 버튼 동작
+    // 1) 햄버거 메뉴 토글
+    (function () {
+      const toggle = document.getElementById('navToggle');
+      const links = document.getElementById('navLinks');
+      if (!toggle || !links) return;
+
+      toggle.addEventListener('click', () => {
+        const isOpen = links.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+        toggle.innerHTML = isOpen
+          ? '<i class="fa-solid fa-xmark" aria-hidden="true"></i>'
+          : '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
+      });
+
+      // 링크 클릭 시 자동 닫기
+      links.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          if (links.classList.contains('open')) {
+            links.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.innerHTML = '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
+          }
+        });
+      });
+    })();
+
+    // 2) 플로팅 Top 버튼
     const floatingTopBtn = document.getElementById('floatingTopBtn');
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 300) {
-        floatingTopBtn.classList.add('show');
-      } else {
-        floatingTopBtn.classList.remove('show');
-      }
-    });
+      if (window.scrollY > 300) floatingTopBtn.classList.add('show');
+      else floatingTopBtn.classList.remove('show');
+    }, { passive: true });
 
-    // 2. 연구과제 필터링 스크립트
-    function filterResearch(type, btn) {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
+    // 3) 연구과제 필터링
+    (function () {
+      const buttons = document.querySelectorAll('.filter-btn');
       const items = document.querySelectorAll('#researchFullList .research-item');
-      items.forEach(item => {
-        const itemType = item.getAttribute('data-type');
-        const itemField = item.getAttribute('data-field');
 
-        if (type === 'all') {
-          item.style.display = 'flex';
-        } else if (itemType === type || itemField === type) {
-          item.style.display = 'flex';
-        } else {
-          item.style.display = 'none';
-        }
+      function applyFilter(type) {
+        items.forEach(item => {
+          const itemType = item.getAttribute('data-type');
+          const itemField = item.getAttribute('data-field');
+          if (type === 'all' || itemType === type || itemField === type) {
+            item.style.display = 'flex';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      }
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          applyFilter(btn.getAttribute('data-filter'));
+        });
       });
-    }
+    })();
 
-    // 3. 조직별 인력 도넛 차트
-    const ctxOrg = document.getElementById('orgChart').getContext('2d');
-    new Chart(ctxOrg, {
+    // 4) Chart.js 공통 옵션
+    const chartFont = { family: "'Pretendard Variable', 'Pretendard', sans-serif", size: 11 };
+    const commonLegend = { position: 'bottom', labels: { boxWidth: 12, padding: 10, font: chartFont } };
+
+    // 조직별 인력 도넛 차트
+    new Chart(document.getElementById('orgChart').getContext('2d'), {
       type: 'doughnut',
       data: {
         labels: ['경영기획본부 (36명)', '문화연구본부 (32명)', '관광연구본부 (36명)', '콘텐츠연구본부 (11명)', '데이터정책본부 (18명)', '감사실 (2명)'],
@@ -1923,15 +2091,22 @@
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11, family: 'Pretendard' } } },
-          title: { display: false }
+          legend: commonLegend,
+          tooltip: {
+            callbacks: {
+              label: (ctx) => {
+                const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                const pct = ((ctx.parsed / total) * 100).toFixed(1);
+                return `${ctx.label}: ${pct}%`;
+              }
+            }
+          }
         }
       }
     });
 
-    // 4. 수입 예산 구성 파이 차트
-    const ctxRev = document.getElementById('revChart').getContext('2d');
-    new Chart(ctxRev, {
+    // 수입 예산 구성 파이 차트
+    new Chart(document.getElementById('revChart').getContext('2d'), {
       type: 'pie',
       data: {
         labels: ['정부출연금/일반 (42.3%)', '개별출연/기금 (24.6%)', '수탁연구 (27.1%)', '이월금/적립금 (6.0%)'],
@@ -1946,14 +2121,18 @@
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11, family: 'Pretendard' } } }
+          legend: commonLegend,
+          tooltip: {
+            callbacks: {
+              label: (ctx) => `${ctx.label}: ${ctx.parsed.toLocaleString()}백만 원`
+            }
+          }
         }
       }
     });
 
-    // 5. 지출 예산 구조 바 차트
-    const ctxExp = document.getElementById('expChart').getContext('2d');
-    new Chart(ctxExp, {
+    // 지출 예산 구조 바 차트
+    new Chart(document.getElementById('expChart').getContext('2d'), {
       type: 'bar',
       data: {
         labels: ['인건비', '개별출연', '수탁연구', '연구사업', '경상비', '예비/적립'],
@@ -1968,14 +2147,30 @@
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { display: false }
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => `${ctx.parsed.y.toLocaleString()}백만 원`
+            }
+          }
         },
         scales: {
-          y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 10, family: 'Pretendard' } } },
-          x: { grid: { display: false }, ticks: { font: { size: 11, family: 'Pretendard' } } }
+          y: {
+            beginAtZero: true,
+            grid: { color: '#f1f5f9' },
+            ticks: {
+              font: chartFont,
+              callback: (v) => v.toLocaleString()
+            }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { font: chartFont }
+          }
         }
       }
     });
   </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79"}' crossorigin="anonymous"></script>
 </body>
 </html>
