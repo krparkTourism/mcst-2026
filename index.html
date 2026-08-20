@@ -2,9 +2,13 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="한국문화관광연구원(KCTI) 현황 및 주요 현안 대시보드 - 문화예술·관광·콘텐츠 정책 연구의 국가 싱크탱크">
   <meta name="theme-color" content="#1e3a8a">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>한국문화관광연구원(KCTI) 현황 및 주요 현안 대시보드</title>
 
   <!-- Chart.js CDN -->
@@ -71,6 +75,10 @@
     html {
       scroll-behavior: smooth;
       -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      /* iOS 노치/홈 인디케이터 대응 (safe-area) */
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
     }
 
     body {
@@ -82,7 +90,12 @@
       -webkit-font-smoothing: antialiased;
       -webkit-tap-highlight-color: transparent;
       overflow-x: hidden;
+      /* 세로 스크롤을 부드럽게 (iOS 관성) */
+      -webkit-overflow-scrolling: touch;
     }
+
+    /* 이미지·미디어 반응형 기본값 */
+    img, svg, canvas, video { max-width: 100%; height: auto; }
 
     img { max-width: 100%; height: auto; }
     a { color: inherit; }
@@ -244,6 +257,12 @@
       letter-spacing: -0.02em;
       line-height: 1.3;
       word-break: keep-all;
+      overflow-wrap: break-word;
+      max-width: 100%;
+    }
+    @media (max-width: 380px) {
+      .hero h1 { font-size: 1.35rem; letter-spacing: -0.03em; }
+      .hero p { font-size: 0.88rem; }
     }
     .hero p {
       font-size: var(--fs-hero-sub);
@@ -278,7 +297,7 @@
        ============================================ */
     .container {
       max-width: 1320px;
-      margin: -3rem auto 3rem;
+      margin: clamp(-3rem, -2vw - 1rem, -1.5rem) auto 3rem;
       padding: 0 clamp(0.75rem, 0.5rem + 1vw, 1.4rem);
       position: relative;
       z-index: 2;
@@ -345,6 +364,12 @@
       margin-bottom: 0.35rem;
       letter-spacing: -0.02em;
       word-break: keep-all;
+      /* 매우 좁은 화면에서 숫자가 넘치지 않도록 자동 축소 */
+      overflow-wrap: break-word;
+      hyphens: auto;
+    }
+    @media (max-width: 380px) {
+      .kpi-val { font-size: 1.35rem; }
     }
     .kpi-sub {
       font-size: 0.8rem;
@@ -476,20 +501,43 @@
     .table-responsive {
       width: 100%;
       overflow-x: auto;
+      overflow-y: hidden;
       -webkit-overflow-scrolling: touch;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       margin-bottom: 1.2rem;
       background: #fff;
-      /* 부드러운 우측 그림자 (스크롤 힌트) */
-      background-image:
-        linear-gradient(to right, #fff 30%, rgba(255,255,255,0)),
-        linear-gradient(to right, rgba(255,255,255,0), #fff 70%) 100% 0,
-        linear-gradient(to right, rgba(15,23,42,0.08), rgba(255,255,255,0)),
-        linear-gradient(to left, rgba(15,23,42,0.08), rgba(255,255,255,0)) 100% 0;
-      background-repeat: no-repeat;
-      background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
-      background-attachment: local, local, scroll, scroll;
+      position: relative;
+      /* 스크롤바를 항상 얇게 노출 (모바일 힌트 강화) */
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-strong) transparent;
+    }
+    .table-responsive::-webkit-scrollbar {
+      height: 6px;
+    }
+    .table-responsive::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .table-responsive::-webkit-scrollbar-thumb {
+      background: var(--border-strong);
+      border-radius: 3px;
+    }
+    /* 스크롤 가능 시 우측 그림자 인디케이터 */
+    .table-responsive::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 20px;
+      height: 100%;
+      background: linear-gradient(to left, rgba(15,23,42,0.12), transparent);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+    .table-responsive.has-overflow::after {
+      opacity: 1;
     }
     .custom-table {
       width: 100%;
@@ -875,8 +923,8 @@
       gap: 0.55rem;
     }
     .qr-box {
-      width: 156px;
-      height: 156px;
+      width: clamp(150px, 40vw, 170px);
+      height: clamp(150px, 40vw, 170px);
       padding: 10px;
       background: #ffffff;
       border: 2px solid var(--primary);
@@ -885,6 +933,7 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 12px rgba(30, 58, 138, 0.15);
+      flex-shrink: 0;
     }
     .qr-box img, .qr-box canvas {
       width: 100% !important;
@@ -922,16 +971,20 @@
       background: var(--primary-bg);
       color: var(--primary);
       border: 1px solid #bfdbfe;
-      padding: 0.4rem 0.75rem;
+      padding: 0.45rem 0.75rem;
       border-radius: 6px;
       font-family: 'Menlo', 'Consolas', monospace;
-      font-size: 0.82rem;
+      font-size: clamp(0.72rem, 0.68rem + 0.2vw, 0.82rem);
       font-weight: 600;
       word-break: break-all;
+      overflow-wrap: anywhere;
       margin-bottom: 0.85rem;
       text-decoration: none;
+      max-width: 100%;
+      line-height: 1.4;
     }
     .access-url:hover { background: #dbeafe; }
+    .access-url i { flex-shrink: 0; }
     .btn-group {
       display: flex;
       gap: 0.55rem;
@@ -940,8 +993,9 @@
     .btn-action {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 7px;
-      padding: 0.55rem 1rem;
+      padding: 0.6rem 1rem;
       font-size: 0.88rem;
       font-weight: 700;
       border-radius: 8px;
@@ -950,6 +1004,13 @@
       border: 1px solid transparent;
       cursor: pointer;
       font-family: inherit;
+      /* 터치 타깃 최소 44px (Apple HIG) 확보 */
+      min-height: 44px;
+      white-space: nowrap;
+    }
+    @media (max-width: 480px) {
+      .btn-group { width: 100%; }
+      .btn-action { flex: 1 1 100%; }
     }
     .btn-action.primary {
       background: var(--primary);
@@ -1110,7 +1171,7 @@
           <button type="button" class="btn-action secondary" id="copyUrlBtn">
             <i class="fa-solid fa-copy" aria-hidden="true"></i> 주소 복사
           </button>
-          <a href="문화전략담당관_기관_및_현안설명_자료_2026.8.21.hwp" download class="btn-action accent">
+          <a href="%EB%AC%B8%ED%99%94%EC%A0%84%EB%9E%B5%EB%8B%B4%EB%8B%B9%EA%B4%80_%EA%B8%B0%EA%B4%80_%EB%B0%8F_%ED%98%84%EC%95%88%EC%84%A4%EB%AA%85_%EC%9E%90%EB%A3%8C_2026.8.21.hwp" download="KCTI_현안설명자료_2026.8.21.hwp" class="btn-action accent">
             <i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i> 원본 HWP 다운로드
           </a>
         </div>
@@ -1206,7 +1267,7 @@
           Ⅱ. 조직 및 인력 현황 (5개 본부·1실 체제)
         </h2>
         <div class="section-actions">
-          <a href="https://www.kcti.re.kr/introduce/organization.do" target="_blank" rel="noopener" class="btn-top-small">
+          <a href="https://www.kcti.re.kr/web/association/organization.do" target="_blank" rel="noopener" class="btn-top-small">
             조직도 <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
           </a>
           <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> Top</a>
@@ -1287,7 +1348,7 @@
           Ⅲ. 예산 및 재무 구조 분석
         </h2>
         <div class="section-actions">
-          <a href="https://www.kcti.re.kr/introduce/management.do" target="_blank" rel="noopener" class="btn-top-small">
+          <a href="https://www.kcti.re.kr/web/intropage/intropageShow.do?page_id=19c93cf6d71445cd99c937fc1cc3f047" target="_blank" rel="noopener" class="btn-top-small">
             경영공시 <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
           </a>
           <a href="#top" class="btn-top-small"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i> Top</a>
@@ -2288,6 +2349,26 @@
           }
         });
       });
+    })();
+
+    // 1-1) 테이블 가로 스크롤 오버플로우 감지 (스크롤 힌트용)
+    (function () {
+      const wrappers = document.querySelectorAll('.table-responsive');
+      function checkOverflow() {
+        wrappers.forEach(w => {
+          if (w.scrollWidth > w.clientWidth + 1) {
+            w.classList.add('has-overflow');
+          } else {
+            w.classList.remove('has-overflow');
+          }
+        });
+      }
+      checkOverflow();
+      window.addEventListener('resize', checkOverflow, { passive: true });
+      // 폰트 로딩 후 재계산 (레이아웃 시프트 대응)
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(checkOverflow);
+      }
     })();
 
     // 2) 플로팅 Top 버튼
